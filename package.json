@@ -1,0 +1,49 @@
+{
+  "name": "hocus-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Hocus: point at something, say what you want. A reusable skeleton for deictic (\"this\", \"that\", \"there\") multimodal web apps. Kiroween 2026, Skeleton Crew.",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "examples/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "dev:room": "npm run dev -w @hocus/room-designer",
+    "dev:planets": "npm run dev -w @hocus/planet-explorer",
+    "dev:lab": "npm run dev -w @hocus/lab",
+    "dev:kitchen": "npm run dev -w @hocus/kitchen-board",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "node scripts/check-determinism.mjs && node scripts/check-app-size.mjs",
+    "test": "vitest run",
+    "test:unit": "vitest run --project unit",
+    "test:props": "vitest run --project properties",
+    "test:props:fast": "cross-env FC_RUNS=50 vitest run --project properties",
+    "test:props:nightly": "cross-env FC_RUNS=5000 vitest run --project properties",
+    "test:replays": "vitest run --project replays",
+    "test:e2e": "playwright test",
+    "test:mutation": "stryker run",
+    "lexicon:lint": "tsx tools/hocus-mcp/src/cli-lint-lexicon.ts",
+    "bench": "tsx scripts/benchmark.ts",
+    "replays:generate": "tsx scripts/generate-replays.ts",
+    "app-size": "node scripts/check-app-size.mjs",
+    "build": "npm run build --workspaces --if-present",
+    "mcp": "tsx tools/hocus-mcp/src/index.ts",
+    "check": "npm run lint && npm run typecheck && npm run test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "latest",
+    "@playwright/test": "^1.65.1",
+    "@stryker-mutator/core": "^10.1.1",
+    "@stryker-mutator/vitest-runner": "^10.1.1",
+    "@types/node": "^22.10.0",
+    "cross-env": "latest",
+    "fast-check": "^4.10.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.0",
+    "vitest": "^5.1.1"
+  }
+}

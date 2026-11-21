@@ -1,0 +1,31 @@
+{
+    "name":  "@hocus/planet-explorer",
+    "version":  "0.1.0",
+    "private":  true,
+    "description":  "Point and Ask Planet Explorer: a touchless 3D solar-system exhibit with quiz mode.",
+    "license":  "MIT",
+    "type":  "module",
+    "scripts":  {
+                    "dev":  "vite",
+                    "build":  "vite build",
+                    "preview":  "vite preview"
+                },
+    "dependencies":  {
+                         "@hocus/core":  "0.1.0",
+                         "@hocus/ui":  "0.1.0",
+                         "@hocus/three":  "0.1.0",
+                         "three":  "^0.187.0",
+                         "react":  "^19.3.1",
+                         "react-dom":  "^19.3.1"
+                     },
+    "devDependencies":  {
+                            "vite":  "^8.3.8",
+                            "@vitejs/plugin-react":  "^6.3.0",
+                            "tailwindcss":  "^4.3.5",
+                            "@tailwindcss/vite":  "^4.3.5",
+                            "vite-plugin-pwa":  "^2.0.0",
+                            "@types/react":  "^19.3.0",
+                            "@types/react-dom":  "latest",
+                            "@types/three":  "^0.187.0"
+                        }
+}

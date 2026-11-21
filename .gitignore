@@ -1,0 +1,32 @@
+# Dependencies and build output
+node_modules/
+dist/
+dev-dist/
+*.tsbuildinfo
+
+# Test and tool output
+coverage/
+test-results/
+playwright-report/
+reports/
+.stryker-tmp/
+*.log
+.props.log
+
+# Downloaded model/wasm files are fetched by scripts/fetch-models.mjs
+apps/*/public/models/
+apps/*/public/wasm/
+examples/*/public/models/
+examples/*/public/wasm/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# Secrets
+.env
+.env.*
+
+# NOTE: .kiro/ is intentionally NOT ignored. The hackathon rules require it to be committed.

@@ -1,0 +1,17 @@
+{
+    "name":  "@hocus/mcp",
+    "version":  "0.1.0",
+    "private":  true,
+    "description":  "MCP server that lets Kiro run the Hocus engine: resolve, replay, explain, lint_lexicon.",
+    "license":  "MIT",
+    "type":  "module",
+    "bin":  {
+                "hocus-mcp":  "./src/index.ts"
+            },
+    "dependencies":  {
+                         "@hocus/core":  "0.1.0",
+                         "@hocus/testkit":  "0.1.0",
+                         "@modelcontextprotocol/sdk":  "^1.32.2",
+                         "zod":  "^4.6.7"
+                     }
+}

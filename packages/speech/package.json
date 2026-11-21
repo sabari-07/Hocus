@@ -1,0 +1,17 @@
+{
+    "name":  "@hocus/speech",
+    "version":  "0.1.0",
+    "private":  true,
+    "description":  "Speech adapters: Web Speech push-to-talk, voice activity detection, typed commands, speech synthesis, optional on-device proposer.",
+    "license":  "MIT",
+    "type":  "module",
+    "main":  "./src/index.ts",
+    "types":  "./src/index.ts",
+    "exports":  {
+                    ".":  "./src/index.ts",
+                    "./*":  "./src/*"
+                },
+    "dependencies":  {
+                         "@hocus/core":  "0.1.0"
+                     }
+}

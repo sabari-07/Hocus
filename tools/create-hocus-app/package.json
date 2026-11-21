@@ -1,0 +1,11 @@
+{
+    "name":  "create-hocus-app",
+    "version":  "0.1.0",
+    "private":  true,
+    "description":  "Scaffold a new Hocus app: defineApp file, starter 3D screen and a passing test.",
+    "license":  "MIT",
+    "type":  "module",
+    "bin":  {
+                "create-hocus-app":  "./src/index.mjs"
+            }
+}
