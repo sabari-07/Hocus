@@ -1,0 +1,8 @@
+{
+  "name": "hocus",
+  "version": "0.1.0",
+  "description": "Build point-and-speak web apps with the Hocus skeleton: the hocus MCP server (resolve, replay, explain, lint_lexicon) plus a skill for scaffolding a new app and the fusion rules Kiro must follow.",
+  "author": { "name": "Hocus contributors" },
+  "keywords": ["hocus", "deictic", "pointing", "multimodal", "voice", "gesture", "this that there", "three.js", "mediapipe"],
+  "license": "MIT"
+}

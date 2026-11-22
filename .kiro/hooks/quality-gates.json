@@ -1,0 +1,44 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "ui-a11y-smoke",
+      "description": "Change in a UI component, app screen or devtools: run the Playwright axe smoke tests (landing, Spellbook, Settings).",
+      "enabled": true,
+      "trigger": "PostFileSave",
+      "matcher": "(packages[\\\\/](ui|devtools)[\\\\/]src|apps[\\\\/][^\\\\/]+[\\\\/]src|examples[\\\\/][^\\\\/]+[\\\\/]src)[\\\\/].*\\.(tsx|css)$",
+      "action": { "type": "command", "command": "npx playwright test -g \"landing|Spellbook\"" },
+      "timeout": 240
+    },
+    {
+      "name": "requirements-changed",
+      "description": "A spec's requirements.md changed: remind the agent to re-run Analyze Requirements and keep property test citations in sync.",
+      "enabled": true,
+      "trigger": "PostFileSave",
+      "matcher": "\\.kiro[\\\\/]specs[\\\\/][^\\\\/]+[\\\\/]requirements\\.md$",
+      "action": {
+        "type": "agent",
+        "prompt": "A requirements.md just changed. Before designing or coding: (1) run Analyze Requirements on this spec and list contradictions or gaps it finds, (2) check that every tests/properties/P*.prop.test.ts describe() title still cites requirement ids that exist, (3) record what changed and why in docs/kiro-journal.md under 'Spec changes'."
+      }
+    },
+    {
+      "name": "new-action-parity",
+      "description": "An app definition changed: every action needs Spellbook examples in en/hi/ta and a keyboard path (menuLabel or a panel button).",
+      "enabled": true,
+      "trigger": "PostFileSave",
+      "matcher": "(apps|examples)[\\\\/][^\\\\/]+[\\\\/]src[\\\\/]app\\.ts$",
+      "action": {
+        "type": "agent",
+        "prompt": "An app's defineApp file changed. For every action in it, check: examples exist for en, hi and ta; the action is reachable without voice (menuLabel for object actions, or a button in main.tsx for others); destructive actions that can affect several objects set destructive: true. Run `npx vitest run tests/unit/apps.test.ts` and fix anything that fails. Then run `npm run app-size` and report the line count."
+      }
+    },
+    {
+      "name": "turn-end-gate",
+      "description": "When the agent finishes a turn: determinism lint, app-size budget, typecheck and unit tests (the pre-push gate).",
+      "enabled": true,
+      "trigger": "Stop",
+      "action": { "type": "command", "command": "npm run lint && npm run typecheck && npm run test:unit" },
+      "timeout": 300
+    }
+  ]
+}

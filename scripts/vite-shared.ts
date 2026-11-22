@@ -26,6 +26,8 @@ export function hocusVite(o: { name: string; short: string; port: number }): Use
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,svg,woff2,task,wasm}'],
+          // Only the non-module WASM build is loaded by FilesetResolver; don't cache the other 15 MB copy.
+          globIgnores: ['**/vision_wasm_module_internal.*'],
           maximumFileSizeToCacheInBytes: 30 * 1024 * 1024,
         },
       }),

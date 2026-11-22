@@ -1,0 +1,41 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "core-determinism",
+      "description": "Any agent edit in packages/core: fail loudly on Date.now, performance.now, Math.random, timers or browser globals (fusion-rules.md 1-2).",
+      "enabled": true,
+      "trigger": "PostFileSave",
+      "matcher": "packages[\\\\/]core[\\\\/]src[\\\\/].*\\.ts$",
+      "action": { "type": "command", "command": "node scripts/check-determinism.mjs" },
+      "timeout": 30
+    },
+    {
+      "name": "core-fast-properties",
+      "description": "Save in the core or testkit: run the fusion property tests with 50 cases each (about 5 s).",
+      "enabled": true,
+      "trigger": "PostFileSave",
+      "matcher": "(packages[\\\\/](core|testkit)[\\\\/]src|tests[\\\\/]properties)[\\\\/].*\\.ts$",
+      "action": { "type": "command", "command": "npm run test:props:fast" },
+      "timeout": 180
+    },
+    {
+      "name": "lexicon-lint",
+      "description": "Change in a lexicon pack or an app definition: lint every language for missing verbs/nouns and collisions, then run the parser and app tests.",
+      "enabled": true,
+      "trigger": "PostFileSave",
+      "matcher": "(packages[\\\\/]core[\\\\/]src[\\\\/]lexicon[\\\\/]|[\\\\/]src[\\\\/]app\\.ts$)",
+      "action": { "type": "command", "command": "npm run lexicon:lint && npx vitest run tests/unit/parser.test.ts tests/unit/apps.test.ts" },
+      "timeout": 120
+    },
+    {
+      "name": "new-replay-regression",
+      "description": "A new replay file appears: run the replay regression suite so it becomes a permanent test.",
+      "enabled": true,
+      "trigger": "PostFileCreate",
+      "matcher": "tests[\\\\/]replays[\\\\/].*\\.replay\\.json$",
+      "action": { "type": "command", "command": "npm run test:replays" },
+      "timeout": 120
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+# AWS Amplify Hosting (monorepo). Create one Amplify app per front end and set AMPLIFY_MONOREPO_APP_ROOT
+# to apps/room-designer, apps/planet-explorer or examples/kitchen-board. Camera and microphone need HTTPS,
+# which Amplify provides. Set VITE_ROOM_URL / VITE_PLANETS_URL / VITE_KITCHEN_URL so the apps link to each other.
+version: 1
+applications:
+  - appRoot: apps/room-designer
+    frontend: &frontend
+      phases:
+        preBuild:
+          commands:
+            - cd ../.. && npm ci && npm run models && cd -
+        build:
+          commands:
+            - npx vite build
+      artifacts:
+        baseDirectory: dist
+        files:
+          - '**/*'
+      customHeaders:
+        - pattern: '**/*'
+          headers:
+            - key: Permissions-Policy
+              value: 'camera=(self), microphone=(self), geolocation=()'
+            - key: Content-Security-Policy
+              value: "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: mediastream:; connect-src 'self'; worker-src 'self' blob:; font-src 'self'"
+            - key: X-Content-Type-Options
+              value: nosniff
+            - key: Referrer-Policy
+              value: no-referrer
+  - appRoot: apps/planet-explorer
+    frontend: *frontend
+  - appRoot: examples/kitchen-board
+    frontend: *frontend

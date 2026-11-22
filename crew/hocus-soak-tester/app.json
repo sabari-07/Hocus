@@ -1,0 +1,21 @@
+{
+  "name": "hocus-soak-tester",
+  "version": "0.1.0",
+  "displayName": "Hocus Soak Tester",
+  "description": "Runs the Hocus fusion property tests every night with thousands of fresh random cases and the replay corpus, and reports any new counterexample as a regression test to add.",
+  "author": "Hocus contributors",
+  "license": "MIT",
+  "tags": ["testing", "property-based-testing", "hocus"],
+  "agents": ["agents/soak-runner.json"],
+  "skills": ["skills/soak-report"],
+  "crons": [
+    {
+      "name": "nightly-soak",
+      "cron_expr": "0 2 * * *",
+      "message": "Run the Hocus nightly soak: properties with FC_RUNS=5000 and a fresh seed, then the replay corpus. Report results with the soak-report skill.",
+      "agent": "soak-runner",
+      "enabled": true
+    }
+  ],
+  "permissions": { "api": [] }
+}

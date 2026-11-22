@@ -1,0 +1,22 @@
+{
+  "$comment": "Mutation testing for the fusion math. npm run test:mutation. Report: reports/mutation/mutation.html. Widen 'mutate' to packages/core/src/**/*.ts for a full (multi-hour) run.",
+  "testRunner": "vitest",
+  "vitest": { "configFile": "stryker.vitest.config.ts", "related": false },
+  "mutate": [
+    "packages/core/src/evidence.ts",
+    "packages/core/src/resolver.ts",
+    "packages/core/src/timing.ts",
+    "packages/core/src/calibration.ts",
+    "packages/core/src/geometry.ts",
+    "packages/core/src/smoothing.ts",
+    "packages/core/src/config.ts"
+  ],
+  "reporters": ["clear-text", "html", "json", "progress"],
+  "coverageAnalysis": "perTest",
+  "concurrency": 6,
+  "timeoutMS": 10000,
+  "timeoutFactor": 1.5,
+  "thresholds": { "high": 85, "low": 70, "break": null },
+  "tempDirName": ".stryker-tmp",
+  "ignoreStatic": true
+}

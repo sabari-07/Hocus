@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "hocus": {
+      "command": "npx",
+      "args": ["tsx", "tools/hocus-mcp/src/index.ts"],
+      "disabled": false,
+      "autoApprove": ["list_apps", "resolve", "replay", "explain", "lint_lexicon"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"],
+      "disabled": false,
+      "autoApprove": ["resolve-library-id", "get-library-docs"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest", "--browser", "chrome"],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "hocus": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["tsx", "tools/hocus-mcp/src/index.ts"],
+      "autoApprove": ["list_apps", "resolve", "replay", "explain", "lint_lexicon"]
+    }
+  }
+}
