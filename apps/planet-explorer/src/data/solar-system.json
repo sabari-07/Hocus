@@ -1,0 +1,31 @@
+{
+  "pack": "solar-system",
+  "source": {
+    "name": "NASA NSSDCA Planetary Fact Sheet (metric) and Sun/Earth Comparison",
+    "urls": ["https://nssdc.gsfc.nasa.gov/planetary/factsheet/", "https://nssdc.gsfc.nasa.gov/planetary/factsheet/sunfact.html"],
+    "retrieved": "2026-11-22",
+    "note": "Sheet 'Last Updated: 13 November 2026'. Moon counts change as new moons are confirmed. Moon distance is from Earth, not the Sun."
+  },
+  "bodies": [
+    { "id": "sun", "name": "Sun", "kind": "star", "diameterKm": 1391400, "distanceMkm": 0, "dayHours": null, "yearDays": null, "moons": null, "tempC": 5500, "rings": false, "color": "#FFB347", "fact": "The Sun holds about 99.8% of all the mass in the solar system." },
+    { "id": "mercury", "name": "Mercury", "kind": "planet", "diameterKm": 4879, "distanceMkm": 57.9, "dayHours": 4222.6, "yearDays": 88.0, "moons": 0, "tempC": 167, "rings": false, "color": "#9C8F86", "fact": "A single day on Mercury (sunrise to sunrise) lasts longer than its year." },
+    { "id": "venus", "name": "Venus", "kind": "planet", "diameterKm": 12104, "distanceMkm": 108.2, "dayHours": 2802.0, "yearDays": 224.7, "moons": 0, "tempC": 464, "rings": false, "color": "#E6C27A", "fact": "Venus is the hottest planet, even though Mercury is closer to the Sun." },
+    { "id": "earth", "name": "Earth", "kind": "planet", "diameterKm": 12756, "distanceMkm": 149.6, "dayHours": 24.0, "yearDays": 365.2, "moons": 1, "tempC": 15, "rings": false, "color": "#4F8BFF", "fact": "Earth is the only place we know of with liquid water on its surface and life." },
+    { "id": "moon", "name": "Moon", "kind": "moon", "diameterKm": 3475, "distanceMkm": 0.384, "dayHours": 708.7, "yearDays": 27.3, "moons": null, "tempC": -20, "rings": false, "color": "#CFCAD6", "fact": "The Moon always shows the same face to Earth." },
+    { "id": "mars", "name": "Mars", "kind": "planet", "diameterKm": 6792, "distanceMkm": 228.0, "dayHours": 24.7, "yearDays": 687.0, "moons": 2, "tempC": -65, "rings": false, "color": "#D9603B", "fact": "Mars is red because iron minerals in its dust have rusted." },
+    { "id": "jupiter", "name": "Jupiter", "kind": "planet", "diameterKm": 142984, "distanceMkm": 778.5, "dayHours": 9.9, "yearDays": 4331, "moons": 95, "tempC": -110, "rings": true, "color": "#D8B08C", "fact": "Jupiter has the shortest day of any planet: under 10 hours." },
+    { "id": "saturn", "name": "Saturn", "kind": "planet", "diameterKm": 120536, "distanceMkm": 1432.0, "dayHours": 10.7, "yearDays": 10747, "moons": 274, "tempC": -140, "rings": true, "color": "#EAD49B", "fact": "Saturn is less dense than water." },
+    { "id": "uranus", "name": "Uranus", "kind": "planet", "diameterKm": 51118, "distanceMkm": 2867.0, "dayHours": 17.2, "yearDays": 30589, "moons": 28, "tempC": -195, "rings": true, "color": "#9FE3E8", "fact": "Uranus spins on its side, tilted about 98 degrees." },
+    { "id": "neptune", "name": "Neptune", "kind": "planet", "diameterKm": 49528, "distanceMkm": 4515.0, "dayHours": 16.1, "yearDays": 59800, "moons": 16, "tempC": -200, "rings": true, "color": "#4A6CFF", "fact": "Neptune takes about 164 Earth years to go round the Sun once." }
+  ],
+  "quiz": [
+    { "q": "Which planet is the hottest?", "a": "venus", "hint": "It is not the closest one. Think thick clouds." },
+    { "q": "Which planet is the largest?", "a": "jupiter", "hint": "It is the fifth from the Sun." },
+    { "q": "Which planet has the most moons?", "a": "saturn", "hint": "It also has the most famous rings." },
+    { "q": "Which planet is closest to the Sun?", "a": "mercury", "hint": "It is also the smallest." },
+    { "q": "Which is the red planet?", "a": "mars", "hint": "It is our outer neighbour." },
+    { "q": "Which planet spins on its side?", "a": "uranus", "hint": "It is the seventh planet." },
+    { "q": "Which planet is farthest from the Sun?", "a": "neptune", "hint": "Look for the deep blue one at the edge." },
+    { "q": "Which planet do we live on?", "a": "earth", "hint": "Third from the Sun." }
+  ]
+}

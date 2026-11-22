@@ -198,8 +198,10 @@ export class Stage {
   /** World -> client (CSS px) coordinates. */
   toScreen(world: THREE.Vector3): { x: number; y: number; behind: boolean } {
     const r = this.rect();
+    this.camera.updateMatrixWorld();
+    const behind = world.clone().applyMatrix4(this.camera.matrixWorldInverse).z > -this.camera.near;
     const v = world.clone().project(this.camera);
-    return { x: r.left + ((v.x + 1) / 2) * r.width, y: r.top + ((1 - v.y) / 2) * r.height, behind: v.z > 1 };
+    return { x: r.left + ((v.x + 1) / 2) * r.width, y: r.top + ((1 - v.y) / 2) * r.height, behind };
   }
 
   private sphereOf(reg: Registered): THREE.Sphere {
