@@ -38,3 +38,11 @@ Thumbs.db
 .tsc.log
 .build-*.log
 
+
+test-results/
+.e2e.log
+.unit.log
+.mcp.log
+.rep.log
+.apps.log
+

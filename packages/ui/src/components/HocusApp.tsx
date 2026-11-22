@@ -8,6 +8,7 @@ import { HocusRuntime, type JudgeStep, type SceneController } from '../runtime.t
 import { SettingsDrawer, Spellbook } from './Drawers.tsx';
 import { Landing, type AppLink } from './Landing.tsx';
 import { Onboarding } from './Onboarding.tsx';
+import { CornerCalibration } from './Calibration.tsx';
 import { CameraPreview, JudgeCaption, LassoTrail, LiveRegions, Loading, Toasts, Wisp } from './Overlays.tsx';
 import { SceneList } from './SceneList.tsx';
 import { SpeechBar } from './SpeechBar.tsx';
@@ -129,8 +130,9 @@ function Shell<S>(props: HocusAppProps<S> & { rt: HocusRuntime<S> }) {
     const id = setInterval(() => {
       if (performance.now() - last > 120_000 && !rt.ui.getState().judge) {
         while (rt.state.past.length) rt.key('undo');
-        rt.ui.setState({ landing: true });
+        rt.ui.setState({ landing: false });
         last = performance.now();
+        void rt.playJudge(props.judge);
       }
     }, 5000);
     return () => {
@@ -138,6 +140,7 @@ function Shell<S>(props: HocusAppProps<S> & { rt: HocusRuntime<S> }) {
       window.removeEventListener('pointermove', bump);
       window.removeEventListener('keydown', bump);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rt]);
 
   const exportReplay = () => {
@@ -205,7 +208,7 @@ function Shell<S>(props: HocusAppProps<S> & { rt: HocusRuntime<S> }) {
                 onSelect={(seq) => rt.ui.setState({ selectedDecision: seq })}
                 onExport={exportReplay}
                 onCopyTest={(rec) => {
-                  void navigator.clipboard?.writeText(testSnippet(`../../apps/${rt.app.id}/src/app.ts`, `./${rt.app.id}-${rec.seq}.replay.json`));
+                  void navigator.clipboard?.writeText(testSnippet(`../../${rt.app.id === 'kitchen-board' ? 'examples' : 'apps'}/${rt.app.id}/src/app.ts`, `./${rt.app.id}-session.replay.json`));
                   rt.toast(t('copied'));
                 }}
                 onLoadReplay={(json) => rt.loadReplay(json)}
@@ -238,6 +241,7 @@ function Shell<S>(props: HocusAppProps<S> & { rt: HocusRuntime<S> }) {
       <Spellbook />
       <SettingsDrawer />
       <Onboarding />
+      <CornerCalibration />
     </div>
   );
 }

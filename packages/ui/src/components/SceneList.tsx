@@ -18,7 +18,7 @@ export function SceneList({ title }: { title?: string }) {
       Object.entries(rt.app.actions).filter(([, spec]) => {
         const kinds = Object.values(spec.slots) as SlotKind[];
         // Offer actions whose required slots can be filled from the selection alone.
-        return (kinds.includes('object') || kinds.includes('objects')) && kinds.every((k) => ['object', 'objects', 'factor', 'number', 'color', 'boolean'].includes(k) || (spec.optional ?? []).length > 0);
+        return (kinds.includes('object') || kinds.includes('objects')) && kinds.every((k) => ['object', 'objects', 'factor', 'number', 'color', 'boolean', 'place'].includes(k));
       }),
     [rt.app],
   );
@@ -34,6 +34,7 @@ export function SceneList({ title }: { title?: string }) {
       if (kind === 'factor') args[slot] = spec.defaults?.[slot] ?? 1.25;
       if (kind === 'color') args[slot] = 'green';
       if (kind === 'boolean') args[slot] = true;
+      if (kind === 'place') args[slot] = { x: 0, y: 0, world: { x: 0, y: 0, z: 0.5 }, surface: 'floor' };
     }
     rt.command(name, args);
   };

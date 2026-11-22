@@ -204,9 +204,14 @@ export function SettingsDrawer() {
           </span>
           <input type="range" min={100} max={1200} step={25} value={st.lagMs} onChange={(e) => set({ lagMs: Number(e.target.value) })} />
         </label>
-        <button className="hx-btn hx-btn--ghost" onClick={() => rt.ui.setState({ settingsOpen: false, onboarding: true })}>
-          {t('recalibrate')}
-        </button>
+        <div className="hx-row">
+          <button className="hx-btn hx-btn--ghost" onClick={() => rt.ui.setState({ settingsOpen: false, onboarding: true })}>
+            {t('recalibrate')}
+          </button>
+          <button className="hx-btn hx-btn--ghost" disabled={vision !== 'running'} onClick={() => rt.ui.setState({ settingsOpen: false, calibrating: true })}>
+            Calibrate corners
+          </button>
+        </div>
       </fieldset>
       <label className="hx-field">
         <span>{t('language')}</span>

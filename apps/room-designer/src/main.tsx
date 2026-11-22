@@ -46,6 +46,11 @@ createRoot(document.getElementById('root')!).render(
           ))}
         </div>
         <div className="hx-menu">
+          {['Crypt', 'Parlor', 'Graveyard'].map((n, i) => (
+            <button key={n} className="hx-btn hx-btn--ghost" onClick={() => rt.command('starter', { which: i + 1 })}>
+              {n}
+            </button>
+          ))}
           <button className="hx-btn hx-btn--danger" onClick={() => rt.command('reset', {})}>
             Start over
           </button>

@@ -129,7 +129,7 @@ export function SpeechBar() {
         <label className="hx-visually-hidden" htmlFor="hx-typed">
           {t('typeCommand')}
         </label>
-        <input id="hx-typed" ref={input} className="hx-input" value={text} placeholder={t('typeCommand')} onChange={(e) => setText(e.target.value)} autoComplete="off" />
+        <input id="hx-typed" ref={input} className="hx-input" value={text} placeholder={t('typeCommand')} onChange={(e) => setText(e.target.value)} autoComplete="off" onFocus={() => rt.hub && (rt.hub.paused = true)} onBlur={() => rt.hub && (rt.hub.paused = false)} />
         <button className="hx-btn" type="submit">
           {t('send')}
         </button>

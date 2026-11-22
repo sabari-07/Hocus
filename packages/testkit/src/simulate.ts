@@ -78,7 +78,9 @@ export function simulateUser(o: SimUserOptions, trialIndex: number, t0: number):
   // The word is spoken near the end of the dwell; sometimes the hand leaves early.
   const leaves = rng.next() < o.earlyLeave;
   const tWordTrue = leaves ? t - rng.int(0, 150) : dwellStart + dwell * (0.5 + rng.next() * 0.5);
-  const away = c(others.length ? others[rng.int(0, others.length - 1)]! : target);
+  // After speaking: keep pointing (40%), drift to empty space (30%) or move to another object (30%).
+  const roll = rng.next();
+  const away = roll < 0.4 ? c(target) : roll < 0.7 ? { x: 40, y: 690 } : c(others.length ? others[rng.int(0, others.length - 1)]! : target);
   moveTo(c(target), away, rng.int(200, 400));
   hold(away, 600);
   const lag = rng.int(o.lagRange[0], o.lagRange[1]);

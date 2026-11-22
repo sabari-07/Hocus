@@ -35,3 +35,9 @@ inclusion: always
 
 Never run long-lived dev servers in a blocking shell; use a background process.
 Pin dependency versions with `^` on the major that was verified; re-check before submitting.
+
+## Windows shell gotcha (learned the hard way)
+
+Windows PowerShell 5 `Get-Content`/`Set-Content` read and write ANSI by default and add a BOM with `-Encoding utf8`.
+That corrupted `é`, `·` and Devanagari text once in this repo. Edit text files with the editor tools or Node (`fs.readFileSync(p, 'utf8')`), never with PowerShell string replacement.
+

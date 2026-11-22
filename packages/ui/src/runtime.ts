@@ -80,6 +80,7 @@ export interface UiState {
   spellbook: boolean;
   settingsOpen: boolean;
   onboarding: boolean;
+  calibrating: boolean;
   landing: boolean;
   judge: { playing: boolean; caption: string; step: number; total: number } | null;
   hand: HandFrame | null;
@@ -151,6 +152,7 @@ export class HocusRuntime<S> {
       spellbook: false,
       settingsOpen: false,
       onboarding: false,
+      calibrating: false,
       landing: !new URLSearchParams(location.search).has('skipLanding'),
       judge: null,
       hand: null,
@@ -399,7 +401,7 @@ export class HocusRuntime<S> {
 
   loadReplay(json: unknown) {
     const file = parseReplayFile(json);
-    this.state = this.engine.initial({ lang: file.lang });
+    this.state = this.engine.initial({ lang: file.lang, ...(file.config ? { config: file.config as Partial<FusionConfig> } : {}) });
     this.log = [];
     for (const e of file.events) this.dispatch(e as HocusEvent);
     this.scene?.sync(this.state.doc.app, this);

@@ -14,7 +14,6 @@
   "scripts": {
     "dev:room": "npm run dev -w @hocus/room-designer",
     "dev:planets": "npm run dev -w @hocus/planet-explorer",
-    "dev:lab": "npm run dev -w @hocus/lab",
     "dev:kitchen": "npm run dev -w @hocus/kitchen-board",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "node scripts/check-determinism.mjs && node scripts/check-app-size.mjs",

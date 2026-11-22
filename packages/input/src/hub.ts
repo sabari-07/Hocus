@@ -65,6 +65,8 @@ export class PointerHub {
   pad = 0.6;
   /** Pause camera pointing (e.g. while typing). */
   paused = false;
+  /** Last raw (unmapped, mirrored) hand position, used by four-corner calibration. */
+  rawHand: Pt | null = null;
 
   constructor(o: HubOptions) {
     this.el = o.element;
@@ -109,6 +111,12 @@ export class PointerHub {
     this.homography = H;
   }
 
+  /** Element size, for calibration targets. */
+  size() {
+    const r = this.el.getBoundingClientRect();
+    return { left: r.left, top: r.top, width: r.width, height: r.height };
+  }
+
   // ------------------------------------------------------------ sources
 
   /** Called by the hand tracker with camera-normalized coordinates. */
@@ -119,6 +127,7 @@ export class PointerHub {
       return;
     }
     const t = this.now();
+    this.rawHand = { x: 1 - f.nx, y: f.ny };
     const p = this.mapCamera(f.nx, f.ny);
     const [x, y] = this.handFilter.filter(p.x, p.y, t);
     this.hand = { ...f, x, y, t };

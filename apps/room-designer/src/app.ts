@@ -195,6 +195,13 @@ export const roomApp = defineApp<Room>({
       menuLabel: 'What is it?',
       examples: { en: ['what is that?'], hi: ['यह क्या है'], ta: ['இது என்ன'] },
     },
+    starter: {
+      slots: { which: 'number' },
+      alwaysConfirm: true,
+      reduce: (_s, a) => [STARTERS.crypt, STARTERS.parlor, STARTERS.graveyard][Number(a.which) - 1] ?? STARTERS.crypt,
+      describe: (a) => `Load starter room ${Number(a.which)}`,
+      examples: { en: ['load room two'], hi: ['कमरा दो लाओ'], ta: ['அறை இரண்டு'] },
+    },
     reset: {
       slots: {},
       alwaysConfirm: true,
@@ -205,7 +212,7 @@ export const roomApp = defineApp<Room>({
   },
   vocabulary: {
     en: {
-      verbs: { lights: ['lights', 'light', 'lamps'] },
+      verbs: { lights: ['lights', 'light', 'lamps'], starter: ['load room', 'starter room', 'load'] },
       nouns: {
         pumpkin: ['pumpkin', 'pumpkins', 'jack o lantern'], ghost: ['ghost', 'ghosts', 'spirit'], bat: ['bat', 'bats'],
         candle: ['candle', 'candles'], cobweb: ['cobweb', 'cobwebs', 'web', 'spider web'], coffin: ['coffin', 'coffins'],
@@ -215,7 +222,7 @@ export const roomApp = defineApp<Room>({
       },
     },
     hi: {
-      verbs: { lights: ['बत्ती', 'लाइट', 'रोशनी'] },
+      verbs: { lights: ['बत्ती', 'लाइट', 'रोशनी'], starter: ['कमरा'] },
       nouns: {
         pumpkin: ['कद्दू'], ghost: ['भूत'], bat: ['चमगादड़'], candle: ['मोमबत्ती'], cobweb: ['जाला', 'मकड़जाल'], coffin: ['ताबूत'],
         lantern: ['लालटेन'], tree: ['पेड़', 'सूखा पेड़'], skeleton: ['कंकाल'], cat: ['बिल्ली', 'काली बिल्ली'], cauldron: ['कड़ाहा'],
@@ -223,7 +230,7 @@ export const roomApp = defineApp<Room>({
       },
     },
     ta: {
-      verbs: { lights: ['விளக்கு', 'விளக்குகள்'] },
+      verbs: { lights: ['விளக்கு', 'விளக்குகள்'], starter: ['அறை'] },
       nouns: {
         pumpkin: ['பூசணி', 'பூசணிக்காய்'], ghost: ['பேய்'], bat: ['வௌவால்'], candle: ['மெழுகுவர்த்தி'], cobweb: ['சிலந்தி வலை', 'வலை'],
         coffin: ['சவப்பெட்டி'], lantern: ['லாந்தர்'], tree: ['மரம்'], skeleton: ['எலும்புக்கூடு'], cat: ['பூனை'], cauldron: ['கொப்பரை'],
