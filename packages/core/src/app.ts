@@ -77,6 +77,11 @@ export interface AppDefinition<S> {
   actions: Record<string, ActionSpec<S>>;
   entities?: Record<string, EntitySpec>;
   vocabulary?: Partial<Record<LangCode, AppVocabulary>>;
+  /**
+   * Action run when the user says only "this one" / "that" outside a question
+   * (e.g. answering a quiz by pointing). Its first object slot receives the pointing word.
+   */
+  pointAction?: string;
 }
 
 const RESERVED = new Set(['undo', 'redo', 'name', 'yes', 'cancel']);

@@ -30,3 +30,11 @@ Thumbs.db
 .env.*
 
 # NOTE: .kiro/ is intentionally NOT ignored. The hackathon rules require it to be committed.
+
+.cache/
+
+
+.probe*.png
+.tsc.log
+.build-*.log
+

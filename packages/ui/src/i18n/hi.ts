@@ -1,0 +1,32 @@
+import type { en } from './en.ts';
+
+/** Hindi UI strings. Drafted with AI help; needs native-speaker review (see i18n-rules.md). */
+export const hi: Partial<Record<keyof typeof en, string>> = {
+  tagline: 'इशारा करो। बोलो। हो गया।',
+  landingLine: 'किसी चीज़ की ओर इशारा करें और बताएँ क्या करना है। Hocus समझ लेता है कि "यह" और "वहाँ" का मतलब क्या था।',
+  startCamera: 'कैमरा से शुरू करें',
+  useMouse: 'माउस और कीबोर्ड से',
+  watchDemo: '60 सेकंड का डेमो देखें',
+  cameraStays: 'आपका कैमरा आपके डिवाइस पर ही रहता है। कुछ भी अपलोड नहीं होता।',
+  holdSpace: 'Space दबाकर बोलें, या लिखें',
+  listening: 'सुन रहा हूँ…',
+  interpreting: 'समझ रहा हूँ…',
+  typeCommand: 'आदेश लिखें',
+  send: 'भेजें',
+  undo: 'वापस',
+  redo: 'फिर से',
+  run: 'चलाएँ',
+  cancel: 'रद्द करें',
+  confirm: 'पक्का करें',
+  mic: 'बोलने के लिए दबाए रखें',
+  spellbook: 'मंत्र-पुस्तक',
+  settings: 'सेटिंग्स',
+  language: 'भाषा',
+  onboardPoint: 'भूत की ओर इशारा करें।',
+  onboardSay: 'अब Space दबाकर "यह" कहें।',
+  onboardTry: 'आज़माएँ: "इसे बड़ा करो"।',
+  skip: 'छोड़ें',
+  next: 'आगे',
+  noDecision: 'Hocus कैसे फ़ैसला करता है, यह देखने के लिए कोई आदेश बोलें या लिखें।',
+  emptyScene: 'अभी यहाँ कुछ नहीं है। "वहाँ एक कद्दू रखो" कहें।',
+};

@@ -254,7 +254,7 @@ export function createEngine<S>(app: AppDefinition<S>, baseConfig: Partial<Fusio
           transcript: text,
           phase: s.phase.kind === 'listening' ? { kind: 'idle' } : s.phase,
         };
-        return onUtterance(cleared, text, ev.t, ev.kind === 'typed', track, ev.vad, fx);
+        return onUtterance(cleared, text, ev.t, ev.kind === 'typed', track, ev.vad, fx, ev.alts);
       }
     }
   }
@@ -275,13 +275,41 @@ export function createEngine<S>(app: AppDefinition<S>, baseConfig: Partial<Fusio
     track: UtteranceTrack | null,
     vad: SpeechEvent['vad'],
     fx: Effect[],
+    alts: string[] = [],
   ): CoreState<S> {
-    const text = typed ? rawText : stripWakeWord(s0, rawText);
-    if (text === null || !text.trim()) return s0;
+    const first = typed ? rawText : stripWakeWord(s0, rawText);
+    if (first === null || !first.trim()) return s0;
     let s = s0;
     const ctx = parseContext(s);
-    const parsed = parse(text, ctx);
+    let text = first;
+    let parsed = parse(text, ctx);
+    // Recognizer alternatives (or an on-device proposer's rewrite) are tried only when the best
+    // transcript means nothing. The engine still binds every pointing word itself.
+    for (const alt of alts) {
+      if (parsed.type !== 'no_action') break;
+      const p = parse(alt, ctx);
+      if (p.type !== 'no_action') {
+        parsed = p;
+        text = alt;
+      }
+    }
 
+    if (parsed.type === 'control' && parsed.intent.kind === 'thisOne' && s.phase.kind !== 'ask' && app.pointAction) {
+      // "that one" outside a question -> the app's pointing action (e.g. a quiz answer).
+      const spec = app.actions[app.pointAction];
+      const slot = spec && Object.entries(spec.slots).find(([, k]) => k === 'object')?.[0];
+      if (slot)
+        parsed = {
+          type: 'frame',
+          frame: {
+            action: app.pointAction,
+            slots: { [slot]: { type: 'deictic', word: 'that', role: 'object', order: 0, tokenIndex: 0, tWord: Number.NaN } },
+            lang: s.lang,
+            raw: text,
+            unknown: [],
+          },
+        };
+    }
     if (parsed.type === 'control') {
       const tWord = typed ? t : t - s.config.lagMs;
       return onControl(s, parsed.intent, tWord, typed, fx);

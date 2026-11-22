@@ -1,0 +1,31 @@
+import type { en } from './en.ts';
+
+/** Tamil UI strings. Drafted with AI help; needs native-speaker review (see i18n-rules.md). */
+export const ta: Partial<Record<keyof typeof en, string>> = {
+  tagline: 'சுட்டு. சொல். முடிந்தது.',
+  landingLine: 'ஏதாவது ஒன்றைச் சுட்டிக்காட்டி என்ன வேண்டும் என்று சொல்லுங்கள். "இது", "அங்கே" என்பதன் பொருளை Hocus கண்டுபிடிக்கும்.',
+  startCamera: 'கேமராவுடன் தொடங்கு',
+  useMouse: 'மவுஸ் மற்றும் விசைப்பலகை',
+  watchDemo: '60 வினாடி டெமோ',
+  cameraStays: 'உங்கள் கேமரா உங்கள் சாதனத்திலேயே இருக்கும். எதுவும் பதிவேற்றப்படாது.',
+  holdSpace: 'Space-ஐ அழுத்திப் பேசுங்கள், அல்லது தட்டச்சு செய்யுங்கள்',
+  listening: 'கேட்கிறது…',
+  interpreting: 'புரிந்துகொள்கிறது…',
+  typeCommand: 'கட்டளையைத் தட்டச்சு செய்யுங்கள்',
+  send: 'அனுப்பு',
+  undo: 'செயல்தவிர்',
+  redo: 'மீண்டும் செய்',
+  run: 'இயக்கு',
+  cancel: 'ரத்து',
+  confirm: 'உறுதிசெய்',
+  spellbook: 'மந்திரப் புத்தகம்',
+  settings: 'அமைப்புகள்',
+  language: 'மொழி',
+  onboardPoint: 'பேயைச் சுட்டுங்கள்.',
+  onboardSay: 'இப்போது Space-ஐ அழுத்தி "இது" என்று சொல்லுங்கள்.',
+  onboardTry: 'முயற்சிக்கவும்: "இதை பெரிதாக்கு".',
+  skip: 'தவிர்',
+  next: 'அடுத்து',
+  noDecision: 'Hocus எப்படி முடிவு செய்கிறது என்று பார்க்க ஒரு கட்டளையைச் சொல்லுங்கள்.',
+  emptyScene: 'இங்கே இன்னும் எதுவும் இல்லை. "அங்கே ஒரு பூசணி வை" என்று சொல்லுங்கள்.',
+};

@@ -1,0 +1,58 @@
+/* "Ink and candlelight". Source of truth for colours, type, spacing and motion. See .kiro/steering/ui-tokens.md */
+:root {
+  --hx-bg: #0e0b14;
+  --hx-panel: #1a1426;
+  --hx-panel-2: #241c34;
+  --hx-overlay: rgba(14, 11, 20, 0.82);
+  --hx-text: #edeaf7;
+  --hx-muted: #b9b2d0;
+  --hx-amber: #ffb347;
+  --hx-teal: #4fe3c1;
+  --hx-violet: #8e7cff;
+  --hx-red: #ff5d73;
+  --hx-line: rgba(237, 234, 247, 0.14);
+  --hx-glow: 0 0 24px rgba(255, 179, 71, 0.35);
+  --hx-radius-s: 8px;
+  --hx-radius-l: 16px;
+  --hx-font-display: 'Cinzel', 'Georgia', serif;
+  --hx-font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --hx-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --hx-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --hx-t-micro: 120ms;
+  --hx-t-state: 200ms;
+  --hx-t-panel: 320ms;
+  --hx-wisp: 48px;
+  --hx-bar-h: 76px;
+  color-scheme: dark;
+}
+
+[data-theme='contrast'] {
+  --hx-bg: #000;
+  --hx-panel: #000;
+  --hx-panel-2: #111;
+  --hx-overlay: rgba(0, 0, 0, 0.92);
+  --hx-text: #fff;
+  --hx-muted: #fff;
+  --hx-line: #fff;
+  --hx-amber: #ffd27a;
+  --hx-teal: #7fffe0;
+  --hx-violet: #c4b8ff;
+}
+
+[data-large='true'] {
+  --hx-wisp: 64px;
+  font-size: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --hx-t-micro: 0ms;
+    --hx-t-state: 0ms;
+    --hx-t-panel: 0ms;
+  }
+}
+[data-motion='reduced'] {
+  --hx-t-micro: 0ms;
+  --hx-t-state: 0ms;
+  --hx-t-panel: 0ms;
+}

@@ -32,7 +32,8 @@
     "app-size": "node scripts/check-app-size.mjs",
     "build": "npm run build --workspaces --if-present",
     "mcp": "tsx tools/hocus-mcp/src/index.ts",
-    "check": "npm run lint && npm run typecheck && npm run test"
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "models": "node scripts/fetch-models.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "latest",
@@ -45,5 +46,10 @@
     "tsx": "^4.23.15",
     "typescript": "^5.9.0",
     "vitest": "^5.1.1"
+  },
+  "overrides": {
+    "@rollup/pluginutils": {
+      "estree-walker": "2.0.2"
+    }
   }
 }
