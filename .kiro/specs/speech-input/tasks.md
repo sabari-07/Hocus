@@ -43,9 +43,9 @@
     - _Requirements: 2.1, 2.2_
   - [x]* 8.2 Typed path in `tests/unit/engine.test.ts` ("keyboard path: click selection + typed command") and P13
     - _Requirements: 5.1, 5.2_
-  - [ ]* 8.3 Unit tests for `estimateWordTimes` (each method, clamping to start and final)
+  - [x]* 8.3 Unit tests for `estimateWordTimes` (each method, clamping to start and final)
     - _Requirements: 2.2, 2.3, 2.4, 2.5_
-  - [ ]* 8.4 Unit test for `Proposer.propose` with a fake `LanguageModel` (accepts only allowed commands, times out)
+  - [x]* 8.4 Unit test for `Proposer.propose` with a fake `LanguageModel` (accepts only allowed commands, times out)
     - _Requirements: 7.2, 7.3, 7.5_
   - [ ]* 8.5 Unit test for `VoiceActivity` segmenting with a fake analyser
     - _Requirements: 3.2, 3.3_

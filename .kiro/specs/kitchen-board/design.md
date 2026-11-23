@@ -44,6 +44,9 @@ flowchart LR
 
 ## Known gaps
 
+> **Status (2026-11-22):** this list was written by the spec-review pass before the fixes. Items now marked `[x]` in `tasks.md` are fixed; see `docs/kiro-journal.md`.
+
+
 - This spec was written after the code, so the app was not literally generated from it.
 - A timer only marks the card; there is no countdown and no alarm.
 - Hindi and Tamil have no example for "half".

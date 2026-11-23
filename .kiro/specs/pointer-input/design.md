@@ -96,6 +96,9 @@ half-curl it.
 
 ## Known gaps
 
+> **Status (2026-11-22):** this list was written by the spec-review pass before the fixes. Items now marked `[x]` in `tasks.md` are fixed; see `docs/kiro-journal.md`.
+
+
 - `solveHomography` and `PointerHub.setCalibration` exist, but no UI collects four calibration points, so the
   touchpad mapping is always used today.
 - `PointerHub.paused` ("pause camera pointing while typing") is never set by any caller.

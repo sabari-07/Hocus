@@ -745,7 +745,7 @@ select {
 .hx-caption {
   position: absolute;
   left: 50%;
-  top: 16px;
+  bottom: 16px;
   transform: translateX(-50%);
   background: rgba(14, 11, 20, 0.9);
   border: 1px solid var(--hx-amber);

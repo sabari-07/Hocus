@@ -32,14 +32,14 @@
   - [x] 4.2 8-step Judge Mode script
     - _Requirements: 6.4_
 
-- [ ] 5. Checks
+- [x] 5. Checks
   - [x]* 5.1 App lint, examples and unique selectables (`tests/unit/apps.test.ts`)
     - _Requirements: 6.1_
   - [x]* 5.2 Replays `planets-compare`, `planets-quiz`, `planets-hindi` (`tests/replays/replays.test.ts`)
     - _Requirements: 2.1, 3.1, 5.2_
   - [x] 5.3 Size budget (`npm run app-size`)
     - _Requirements: 6.5_
-  - [ ]* 5.4 Unit test that the data file matches the NASA sheet values it cites (a fixed snapshot check)
+  - [x]* 5.4 Unit test that the data file matches the NASA sheet values it cites (a fixed snapshot check)
     - _Requirements: 1.2_
-  - [ ]* 5.5 Tamil replay (only English and Hindi replays exist)
+  - [x]* 5.5 Tamil replay (only English and Hindi replays exist)
     - _Requirements: 6.1_

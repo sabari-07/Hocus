@@ -50,14 +50,14 @@
   - [x] 8.3 "what was that?" from `dwellSegments`
     - _Requirements: 7.4_
 
-- [ ] 9. Tests
+- [x] 9. Tests
   - [x]* 9.1 Dialogue examples in `tests/unit/engine.test.ts`
     - _Requirements: 1.3, 1.5, 3.2, 3.3, 3.6, 4.4, 5.2_
   - [x]* 9.2 Property tests P08, P12, P19, P20 (`tests/properties/`)
     - _Requirements: 2.4, 3.6, 4.1, 4.4, 4.5, 5.5_
   - [x]* 9.3 Planet quiz answered by "that one" via `pointAction` (`tests/replays/planets-quiz.replay.json`)
     - _Requirements: 7.1_
-  - [ ]* 9.4 Unit tests for "not that" with no candidates left and for "what was that?"
+  - [x]* 9.4 Unit tests for "not that" with no candidates left and for "what was that?"
     - _Requirements: 5.3, 5.4, 7.4_
-  - [ ]* 9.5 E2E test of the keyboard-only dialogue (Enter, Esc, 1-9, Ctrl+Z) in a built app (`tests/e2e/`, not written)
+  - [x]* 9.5 E2E test of the keyboard-only dialogue (Enter, Esc, 1-9, Ctrl+Z) in a built app (`tests/e2e/`, not written)
     - _Requirements: 3.1, 3.2, 3.3, 4.4_

@@ -36,7 +36,7 @@ this repository; nothing is staged.
 - No real counterexample from a property has been found yet. **Do not stage one for the video.** If one appears in
   the nightly soak (`crew/hocus-soak-tester` or `.github/workflows/nightly.yml`), save it under
   `tests/properties/regressions/` and record it here.
-- Stryker results: see `docs/mutation.md`.
+- **Stryker** first reported nearly every mutant as surviving. That was a setup bug, not weak tests: the sandbox resolved `@hocus/core` through the symlink to the original sources, so no mutant ran. After fixing the aliases the real score was 50.4% on evidence/timing/calibration; `calibrateLag` was at 19% because only the nudge was tested. New exact-value tests raised those files to 77.4%. Full table: `docs/mutation.md`. `resolver.ts` (46%) is the weakest file and the next target.
 
 ## Spec review by a sub-agent
 
@@ -53,6 +53,10 @@ plan and the code disagreed. Kiro fixed these:
 - missing unit tests for pose classification, mapping, word timing, "not that", "what was that" and `pointAction`.
 
 Remaining unchecked tasks are listed in each `.kiro/specs/*/tasks.md`.
+
+| 12 | Stryker sandbox imported the unmutated sources through workspace symlinks | Implausible "everything survives" score | Aliases in `stryker.vitest.config.ts` |
+| 13 | Test helper passed an empty names map, so "the bat" did not resolve in a unit test while it did in the app | `tests/unit/resolver.test.ts` | Helper now uses the engine's names map |
+| 14 | UI overlays (drawers, X-ray, buttons) counted as pointing at the 3D object underneath | Screenshot review | Pointer hub only counts events whose target is the canvas or label layer |
 
 ## Spec changes
 

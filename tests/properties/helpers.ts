@@ -39,7 +39,7 @@ export function resolveWith(
     selectables: engine.selectables(state),
     selection: { ids: opts.selection ?? [], t: 0 },
     lastActed: opts.lastActed ?? [],
-    names: {},
+    names: engine.parseContext(state).names,
     config: { ...DEFAULT_CONFIG, ...(opts.config ?? {}) },
     typed: opts.typed ?? false,
     tFinal: opts.tFinal,

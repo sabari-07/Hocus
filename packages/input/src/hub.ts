@@ -158,14 +158,25 @@ export class PointerHub {
     return { x: r.left + p.x, y: r.top + p.y };
   }
 
+  /** Only the 3D canvas (or the transparent label layer) counts as pointing; UI overlays never do. */
+  private onScene(e: PointerEvent) {
+    const el = e.target as Element | null;
+    return !el || el instanceof HTMLCanvasElement || (el as HTMLElement).classList?.contains('hx-labels') || el === this.el;
+  }
+
   private onMove = (e: PointerEvent) => {
     const t = this.now();
-    if (e.pointerType === 'touch') this.touch = { x: e.clientX, y: e.clientY, t };
-    else this.mouse = { x: e.clientX, y: e.clientY, inside: true, t };
+    const inside = this.onScene(e);
+    if (e.pointerType === 'touch') this.touch = inside ? { x: e.clientX, y: e.clientY, t } : null;
+    else this.mouse = { x: e.clientX, y: e.clientY, inside, t };
     if (this.lassoDrag) this.lassoDrag.push({ x: e.clientX, y: e.clientY });
   };
 
   private onDown = (e: PointerEvent) => {
+    if (!this.onScene(e)) {
+      this.down = null;
+      return;
+    }
     this.down = { x: e.clientX, y: e.clientY, t: this.now() };
     if (e.shiftKey && e.pointerType !== 'touch') {
       this.lassoDrag = [{ x: e.clientX, y: e.clientY }];

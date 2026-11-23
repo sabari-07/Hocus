@@ -31,7 +31,7 @@ interface Script {
   name: string;
   app: AppDefinition<unknown>;
   description: string;
-  steps: Array<{ point?: string | { x: number; y: number; z: number }; say?: string; typed?: boolean; holdMs?: number; seen?: number[] }>;
+  steps: Array<{ point?: string | { x: number; y: number; z: number }; say?: string; typed?: boolean; holdMs?: number; seen?: number[]; chain?: boolean }>;
 }
 
 const SCRIPTS: Script[] = [
@@ -44,15 +44,21 @@ const SCRIPTS: Script[] = [
   {
     name: 'room-name-and-repair',
     app: roomApp as AppDefinition<unknown>,
-    description: 'Name the cat Boris, use the name, then "no, the other one" after pointing between two objects.',
+    description: 'Name the cat Boris, use the name without pointing, recolour the ghost, then undo.',
     steps: [{ point: 'cat-1', say: 'call this one Boris' }, { say: 'make Boris bigger', typed: true }, { point: 'ghost-1', say: 'turn this green' }, { say: 'undo', typed: true }],
+  },
+  {
+    name: 'room-repair-other-one',
+    app: roomApp as AppDefinition<unknown>,
+    description: 'Brief dwell on the cat, longer on the ghost, "make that bigger" binds the ghost; "no, the other one" undoes it and re-binds the cat.',
+    steps: [{ point: 'cat-1', holdMs: 360, chain: true }, { point: 'ghost-1', say: 'make that bigger', holdMs: 700, seen: [700 + 350 - 100] }, { say: 'no the other one', typed: true }],
   },
   {
     name: 'planets-compare',
     app: planetApp as AppDefinition<unknown>,
     description: 'Mars then Earth: "compare this with that" binds in spoken order.',
     // "this" is first heard while still on Mars (offset is relative to the Earth step start).
-    steps: [{ point: 'mars', holdMs: 900 }, { point: 'earth', say: 'compare this with that', seen: [-450 + 350 - 500, 900] }],
+    steps: [{ point: 'mars', holdMs: 900, chain: true }, { point: 'earth', say: 'compare this with that', seen: [-100 + 350, 900] }],
   },
   {
     name: 'planets-quiz',
@@ -67,6 +73,12 @@ const SCRIPTS: Script[] = [
     steps: [{ point: 'jupiter', say: 'यह क्या है' }],
   },
   {
+    name: 'planets-tamil',
+    app: planetApp as AppDefinition<unknown>,
+    description: 'Tamil: point at Saturn, "இது என்ன".',
+    steps: [{ point: 'saturn', say: 'இது என்ன' }],
+  },
+  {
     name: 'kitchen-double',
     app: kitchenApp as AppDefinition<unknown>,
     description: 'Point at the pumpkin purée, "double this".',
@@ -75,7 +87,8 @@ const SCRIPTS: Script[] = [
 ];
 
 for (const sc of SCRIPTS) {
-  const lang = /[\u0900-\u097F]/.test(sc.steps.map((s) => s.say ?? '').join('')) ? 'hi' : 'en';
+  const said = sc.steps.map((s) => s.say ?? '').join('');
+  const lang = /[\u0900-\u097F]/.test(said) ? 'hi' : /[\u0B80-\u0BFF]/.test(said) ? 'ta' : 'en';
   const events: HocusEvent[] = lang === 'en' ? [] : [{ type: 'lang', t: 0, lang }];
   let t = 1000;
   for (const st of sc.steps) {
@@ -85,11 +98,15 @@ for (const sc of SCRIPTS) {
     if (st.say && st.typed) speech = [{ type: 'speech', speech: { t: t + hold - 100, kind: 'typed', text: st.say, lang } }];
     else if (st.say) {
       const words = st.say.split(' ').length;
-      const timed = Math.max(1, (st.say.match(/\b(this|that|it|there|here|these)\b|यह|वह/g) ?? []).length);
+      const timed = Math.max(1, (st.say.match(/\b(this|that|it|there|here|these)\b|यह|वह|இது|அது/g) ?? []).length);
       const seen = st.seen ? st.seen.map((o) => t + o) : Array.from({ length: timed }, (_, k) => t + hold - 350 + k * 250);
       speech = utteranceEvents(st.say, Math.min(t + 200, seen[0]! - 300), seen, t + hold + 150 + words * 20, lang);
     }
     events.push(...mergeEvents(samples.map((sample) => ({ type: 'pointer', sample })), speech));
+    if (st.chain) {
+      t += hold;
+      continue;
+    }
     // Ticks well after the 600 ms preview so each command executes before the next one.
     t += hold + 900;
     events.push({ type: 'tick', t });

@@ -2,7 +2,7 @@
  "version": 1,
  "app": "room-designer",
  "origin": "synthetic",
- "description": "Name the cat Boris, use the name, then \"no, the other one\" after pointing between two objects.",
+ "description": "Name the cat Boris, use the name without pointing, recolour the ghost, then undo.",
  "lang": "en",
  "events": [
   {

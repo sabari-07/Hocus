@@ -77,6 +77,9 @@ Every action has `mutates: false`. App verbs per language add the question phras
 
 ## Known gaps
 
+> **Status (2026-11-22):** this list was written by the spec-review pass before the fixes. Items now marked `[x]` in `tasks.md` are fixed; see `docs/kiro-journal.md`.
+
+
 - The moon counts and other numbers are only as current as the retrieval date in the data file; there is no
   automated refresh or check against the NASA sheet.
 - Facts and replies are English only; Hindi and Tamil users can ask in their language but hear English answers.

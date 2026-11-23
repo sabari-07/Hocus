@@ -63,5 +63,5 @@
     - _Requirements: 1.4_
   - [x]* 10.5 App lint and Spellbook examples in every language (`tests/unit/apps.test.ts`)
     - _Requirements: 7.1, 7.2_
-  - [ ]* 10.6 Unit tests for lint warnings and errors on a deliberately broken fixture app
+  - [x]* 10.6 Unit tests for lint warnings and errors on a deliberately broken fixture app
     - _Requirements: 7.1, 7.2, 7.3, 7.4_

@@ -18,5 +18,5 @@
   - [x] 3.2 Size budget 150 lines (`npm run app-size`)
     - _Requirements: 3.2_
 
-- [ ] 4. Running timers with a countdown and an alert
+- [x] 4. Running timers with a countdown and an alert
   - _Requirements: 2.2_

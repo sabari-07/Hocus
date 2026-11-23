@@ -35,7 +35,7 @@
     - _Requirements: 2.4, 2.5, 4.4_
   - [x] 5.2 "Export PNG" and the 8-step Judge Mode script
     - _Requirements: 6.4, 6.5_
-  - [ ] 5.3 Command or button to load the parlor and graveyard starters
+  - [x] 5.3 Command or button to load the parlor and graveyard starters
     - _Requirements: 1.3_
 
 - [x] 6. Checks
@@ -45,7 +45,7 @@
     - _Requirements: 2.2, 3.1, 3.4_
   - [x] 6.3 Size budget (`npm run app-size`)
     - _Requirements: 6.6_
-  - [ ]* 6.4 Replay with a real "no, the other one" repair in the room
+  - [x]* 6.4 Replay with a real "no, the other one" repair in the room
     - _Requirements: 3.4_
-  - [ ]* 6.5 E2E + axe run of the built app with mouse and typed commands (`tests/e2e/`, not written)
+  - [x]* 6.5 E2E + axe run of the built app with mouse and typed commands (`tests/e2e/`, not written)
     - _Requirements: 2.4, 3.1_

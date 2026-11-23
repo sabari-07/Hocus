@@ -17,11 +17,11 @@
     - _Requirements: 2.2_
   - [x] 2.3 `loadReplay` with `parseReplayFile`
     - _Requirements: 2.3, 2.5_
-  - [ ] 2.4 Apply the file's `config` in `loadReplay` and show an error when a file is invalid
+  - [x] 2.4 Apply the file's `config` in `loadReplay` and show an error when a file is invalid
     - _Requirements: 2.3, 2.5_
   - [x] 2.5 "Copy test" with `testSnippet`
     - _Requirements: 2.4_
-  - [ ] 2.6 Make `testSnippet` paths match the exported file name and the `examples/` folder
+  - [x] 2.6 Make `testSnippet` paths match the exported file name and the `examples/` folder
     - _Requirements: 2.4_
 
 - [x] 3. Replay corpus
@@ -35,12 +35,12 @@
     - _Requirements: 3.6_
   - [ ] 3.5 Commit at least one recorded session (origin `recorded`) from a real camera and microphone run
     - _Requirements: 3.1, 3.5_
-  - [ ] 3.6 Add the "no, the other one" step that `room-name-and-repair` describes
+  - [x] 3.6 Add the "no, the other one" step that `room-name-and-repair` describes
     - _Requirements: 3.2_
 
 - [x] 4. Timeline simulator (`packages/devtools/src/Simulator.tsx`)
   - Segments, utterance, first word time, `resolveFrame` with `DEFAULT_CONFIG`, summary
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [ ] 5. Standalone Lab app for `npm run dev:lab` (`@hocus/lab` workspace, not created)
+- [x] 5. Lab lives inside every app as the X-ray sheet (Decision, Timeline simulator, Recorder tabs); the standalone `dev:lab` script was removed instead of adding a fourth front end
   - _Requirements: 1.1, 4.1_

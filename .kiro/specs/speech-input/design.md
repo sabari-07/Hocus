@@ -87,6 +87,9 @@ alternatives only while the parse is still `no_action`.
 
 ## Known gaps
 
+> **Status (2026-11-22):** this list was written by the spec-review pass before the fixes. Items now marked `[x]` in `tasks.md` are fixed; see `docs/kiro-journal.md`.
+
+
 - The VAD opens a second microphone stream next to the recognizer's own.
 - `VoiceActivity.level` is computed but no component shows it.
 - The proposer session is created with English as its expected language, while the allowed list can be Hindi or

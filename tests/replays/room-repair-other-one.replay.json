@@ -1,0 +1,763 @@
+{
+ "version": 1,
+ "app": "room-designer",
+ "origin": "synthetic",
+ "description": "Brief dwell on the cat, longer on the ghost, \"make that bigger\" binds the ghost; \"no, the other one\" undoes it and re-binds the cat.",
+ "lang": "en",
+ "events": [
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1000,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1033.3333333333333,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1066.6666666666665,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1099.9999999999998,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1133.333333333333,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1166.6666666666663,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1199.9999999999995,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1233.3333333333328,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1266.666666666666,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1299.9999999999993,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1333.3333333333326,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "cat-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1360,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1393.3333333333333,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1426.6666666666665,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1459.9999999999998,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1493.333333333333,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1526.6666666666663,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1559.9999999999995,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "speech",
+   "speech": {
+    "t": 1560,
+    "kind": "start",
+    "lang": "en"
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1593.3333333333328,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1626.666666666666,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1659.9999999999993,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1693.3333333333326,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1726.6666666666658,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1759.999999999999,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1793.3333333333323,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1826.6666666666656,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1859.9999999999989,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1893.3333333333321,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1926.6666666666654,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1959.9999999999986,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 1993.333333333332,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 2026.6666666666652,
+    "x": 499,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "pointer",
+   "sample": {
+    "t": 2059.9999999999986,
+    "x": 501,
+    "y": 400,
+    "conf": 0.9,
+    "source": "hand",
+    "pose": "point",
+    "hits": [
+     {
+      "id": "ghost-1",
+      "quality": 1
+     }
+    ]
+   }
+  },
+  {
+   "type": "speech",
+   "speech": {
+    "t": 2270,
+    "kind": "final",
+    "text": "make that bigger",
+    "lang": "en"
+   }
+  },
+  {
+   "type": "speech",
+   "speech": {
+    "t": 2271,
+    "kind": "end",
+    "lang": "en"
+   }
+  },
+  {
+   "type": "speech",
+   "speech": {
+    "t": 2310,
+    "kind": "interim",
+    "text": "make that bigger",
+    "lang": "en"
+   }
+  },
+  {
+   "type": "tick",
+   "t": 2960
+  },
+  {
+   "type": "tick",
+   "t": 3360
+  },
+  {
+   "type": "speech",
+   "speech": {
+    "t": 4460,
+    "kind": "typed",
+    "text": "no the other one",
+    "lang": "en"
+   }
+  },
+  {
+   "type": "tick",
+   "t": 5460
+  },
+  {
+   "type": "tick",
+   "t": 5860
+  }
+ ],
+ "expected": {
+  "decisions": [
+   {
+    "raw": "make that bigger",
+    "outcome": "preview",
+    "bindings": {
+     "target": {
+      "kind": "object",
+      "id": "ghost-1"
+     },
+     "factor": {
+      "kind": "value",
+      "value": 1.25
+     }
+    }
+   },
+   {
+    "raw": "make that bigger",
+    "outcome": "preview",
+    "bindings": {
+     "target": {
+      "kind": "object",
+      "id": "cat-1"
+     },
+     "factor": {
+      "kind": "value",
+      "value": 1.25
+     }
+    }
+   }
+  ],
+  "finalApp": {
+   "items": [
+    {
+     "id": "pumpkin-1",
+     "type": "pumpkin",
+     "n": 1,
+     "x": -0.6,
+     "y": 0,
+     "z": 0.6,
+     "scale": 1,
+     "rotation": 0,
+     "tint": null
+    },
+    {
+     "id": "ghost-1",
+     "type": "ghost",
+     "n": 1,
+     "x": 2.6,
+     "y": 1.6,
+     "z": -0.8,
+     "scale": 1,
+     "rotation": 0,
+     "tint": null
+    },
+    {
+     "id": "candle-1",
+     "type": "candle",
+     "n": 1,
+     "x": -2.6,
+     "y": 0,
+     "z": 0.9,
+     "scale": 1,
+     "rotation": 0,
+     "tint": null
+    },
+    {
+     "id": "candle-2",
+     "type": "candle",
+     "n": 2,
+     "x": 1,
+     "y": 0,
+     "z": 1.5,
+     "scale": 1,
+     "rotation": 0,
+     "tint": null
+    },
+    {
+     "id": "coffin-1",
+     "type": "coffin",
+     "n": 1,
+     "x": -3.6,
+     "y": 0,
+     "z": -1.6,
+     "scale": 1,
+     "rotation": 0,
+     "tint": null
+    },
+    {
+     "id": "window-1",
+     "type": "window",
+     "n": 1,
+     "x": 0.8,
+     "y": 2.6,
+     "z": -3.9,
+     "scale": 1,
+     "rotation": 0,
+     "tint": null
+    },
+    {
+     "id": "cobweb-1",
+     "type": "cobweb",
+     "n": 1,
+     "x": -4.6,
+     "y": 3.2,
+     "z": -3.9,
+     "scale": 1,
+     "rotation": 0,
+     "tint": null
+    },
+    {
+     "id": "cat-1",
+     "type": "cat",
+     "n": 1,
+     "x": 3.4,
+     "y": 0,
+     "z": 1.4,
+     "scale": 1.25,
+     "rotation": 0,
+     "tint": null
+    }
+   ],
+   "lightsOn": true,
+   "counter": {
+    "pumpkin": 1,
+    "ghost": 1,
+    "candle": 2,
+    "coffin": 1,
+    "window": 1,
+    "cobweb": 1,
+    "cat": 1
+   }
+  }
+ }
+}

@@ -98,12 +98,12 @@ docs/        architecture · kiro-journal · benchmark · app-size · write-up �
 |---|---|---|
 | Determinism lint (no clock/random/DOM in core) | `npm run lint` | passing |
 | Typecheck (strict) | `npm run typecheck` | passing |
-| Unit tests | `npm run test:unit` | 56 passing |
-| Property tests P01–P20 (100 cases each) | `npm run test:props` | 23 passing |
+| Unit tests | `npm run test:unit` | 107 passing |
+| Property tests P01–P20 (100 cases each) | `npm run test:props` | 24 passing |
 | Sabotage mutants (each killed by its property) | `node scripts/sanity-mutants.mjs` | 7 of 7 killed |
-| Replay corpus | `npm run test:replays` | 7 passing (synthetic sessions) |
+| Replay corpus | `npm run test:replays` | 9 passing (8 synthetic sessions, incl. a repair, Hindi and Tamil) |
 | E2E + axe (no serious/critical issues) | `npm run test:e2e` | 9 passing |
-| Mutation testing (fusion math) | `npm run test:mutation` | see `docs/mutation.md` |
+| Mutation testing (fusion math) | `npm run test:mutation` | 59.7% overall; timing 91%, geometry 82%, evidence 77%, resolver 46% (`docs/mutation.md`) |
 | Benchmark vs baselines (simulated users) | `npm run bench` | see `docs/benchmark.md` |
 
 ## Kiro

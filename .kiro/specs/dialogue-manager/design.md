@@ -102,6 +102,9 @@ next candidate (`otherOne`) or resolves again (`notThat`). For a spoken command 
 
 ## Known gaps
 
+> **Status (2026-11-22):** this list was written by the spec-review pass before the fixes. Items now marked `[x]` in `tasks.md` are fixed; see `docs/kiro-journal.md`.
+
+
 - `command` events skip preview and produce no `DecisionRecord`, so menu actions do not appear in the X-ray
   or in a replay's expected decisions.
 - When `onCommand` enters `confirm`, it announces but does not highlight the objects or play the `ask` cue, unlike

@@ -50,3 +50,9 @@ test-results/
 .stryker.log
 .check.log
 
+
+.p*.log
+.screen-*.png
+.mut-*.json
+.stryker2.log
+

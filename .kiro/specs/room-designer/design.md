@@ -72,6 +72,9 @@ The only app verb is `lights`; all other verbs come from the skeleton packs.
 
 ## Known gaps
 
+> **Status (2026-11-22):** this list was written by the spec-review pass before the fixes. Items now marked `[x]` in `tasks.md` are fixed; see `docs/kiro-journal.md`.
+
+
 - The parlor and graveyard starters exist in `STARTERS` but there is no command or button to load them.
 - `move` has `menuLabel: 'Move to centre'`, but the actions menu does not offer place-based actions, so it never
   appears; the nudge buttons are the keyboard path for moving.

@@ -29,7 +29,7 @@
     - _Requirements: 3.1, 3.3_
   - [x] 4.2 Live regions (polite results, assertive questions)
     - _Requirements: 3.5_
-  - [ ] 4.3 Menu entry for place-based actions (for example the room's "Move to centre"), which the menu filter excludes today
+  - [x] 4.3 Menu entry for place-based actions (for example the room's "Move to centre"), which the menu filter excludes today
     - _Requirements: 3.3_
 
 - [x] 5. Help and setup
@@ -49,29 +49,29 @@
 - [x] 7. Kiosk and test hooks
   - [x] 7.1 `?kiosk`: large targets, 2-minute idle reset to landing
     - _Requirements: 5.3_
-  - [ ] 7.2 Kiosk attract loop that starts Judge Mode when idle (mentioned in the code comment, not implemented)
+  - [x] 7.2 Kiosk attract loop that starts Judge Mode when idle (mentioned in the code comment, not implemented)
     - _Requirements: 5.3_
   - [x] 7.3 `window.__hocus` in dev builds or with `e2e` in the URL
     - _Requirements: 5.4_
 
-- [ ] 8. Scaffolder (`tools/create-hocus-app`)
+- [x] 8. Scaffolder (`tools/create-hocus-app`)
   - [x] 8.1 Package with the `create-hocus-app` bin entry
     - _Requirements: 6.1_
-  - [ ] 8.2 `src/index.mjs` that writes `src/app.ts`, `src/scene.ts`, `src/main.tsx`, config and public assets
+  - [x] 8.2 `src/index.mjs` that writes `src/app.ts`, `src/scene.ts`, `src/main.tsx`, config and public assets
     - _Requirements: 6.1_
-  - [ ] 8.3 Generated passing test for the new app
+  - [x] 8.3 Generated passing test for the new app
     - _Requirements: 6.1_
 
 - [x] 9. Size budget
   - `scripts/check-app-size.mjs` (300 / 300 / 150 on `src/app.ts`), `docs/app-size.md`, part of `npm run lint`
   - _Requirements: 6.2, 6.3, 6.4_
 
-- [ ] 10. Tests
+- [x] 10. Tests
   - [x]* 10.1 Property test P13 (`tests/properties/P13-modality-parity.prop.test.ts`)
     - _Requirements: 3.2_
   - [x]* 10.2 Real apps: lint, Spellbook examples, unique selectables (`tests/unit/apps.test.ts`)
     - _Requirements: 1.1, 4.1_
-  - [ ]* 10.3 Playwright + axe on each app with mouse and typed commands (`tests/e2e/*.spec.ts`, `playwright.config.ts`, not written)
+  - [x]* 10.3 Playwright + axe on each app with mouse and typed commands (`tests/e2e/*.spec.ts`, `playwright.config.ts`, not written)
     - _Requirements: 3.1, 3.2, 3.4, 3.5_
-  - [ ]* 10.4 Unit test that `defineApp` rejects reserved names and undeclared optional slots
+  - [x]* 10.4 Unit test that `defineApp` rejects reserved names and undeclared optional slots
     - _Requirements: 1.2, 1.3_

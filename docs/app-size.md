@@ -17,7 +17,7 @@ Tracking, speech, parsing, fusion, dialogue, undo, replay, X-ray, Spellbook, set
 | Package | Lines |
 |---|---|
 | @hocus/core | 2868 |
-| @hocus/input | 278 |
+| @hocus/input | 287 |
 | @hocus/vision | 199 |
 | @hocus/speech | 358 |
 | @hocus/three | 401 |

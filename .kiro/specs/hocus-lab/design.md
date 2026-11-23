@@ -82,6 +82,9 @@ preview executes before the next step.
 
 ## Known gaps
 
+> **Status (2026-11-22):** this list was written by the spec-review pass before the fixes. Items now marked `[x]` in `tasks.md` are fixed; see `docs/kiro-journal.md`.
+
+
 - `loadReplay` starts from `engine.initial({ lang })` and ignores the file's `config` (lag, minimum evidence),
   while `replays.test.ts` and `runReplay` apply it, so a loaded session can resolve differently in the browser.
 - Loading dispatches all events at once through the runtime, so sounds and announcements fire in a burst; a

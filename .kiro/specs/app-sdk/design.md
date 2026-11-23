@@ -111,6 +111,9 @@ example parses to its own action in every language, and that selectable ids and 
 
 ## Known gaps
 
+> **Status (2026-11-22):** this list was written by the spec-review pass before the fixes. Items now marked `[x]` in `tasks.md` are fixed; see `docs/kiro-journal.md`.
+
+
 - The kiosk code comment says "attract via Judge Mode", but the code only resets and shows the landing overlay;
   it does not start Judge Mode by itself.
 - The room designer's `move` action has `menuLabel: 'Move to centre'`, but `move` needs a place slot, so the

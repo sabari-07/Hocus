@@ -11,7 +11,7 @@
     - _Requirements: 2.1, 2.2_
   - [x] 2.2 `solveHomography`, `applyHomography`, `PointerHub.setCalibration`
     - _Requirements: 2.6_
-  - [ ] 2.3 Four-corner calibration UI that collects points and calls `solveHomography` + `setCalibration`
+  - [x] 2.3 Four-corner calibration UI that collects points and calls `solveHomography` + `setCalibration`
     - _Requirements: 2.6_
 
 - [x] 3. Pointer hub (`packages/input/src/hub.ts`)
@@ -25,7 +25,7 @@
     - _Requirements: 4.2, 4.3, 4.5_
   - [x] 3.5 Sensitivity setting drives the hand filter (`setSmoothing`, `HocusRuntime.applySmoothing`)
     - _Requirements: 2.5_
-  - [ ] 3.6 Pause camera pointing while the user types (the `paused` flag exists but nothing sets it)
+  - [x] 3.6 Pause camera pointing while the user types (the `paused` flag exists but nothing sets it)
     - _Requirements: 1.2_
 
 - [x] 4. Stage hit testing (`packages/three/src/stage.ts`)
@@ -46,14 +46,14 @@
   - [x] 6.2 `GestureLatch` (450 ms hold, fires once) and `gesture` events from `HocusRuntime.onHand`
     - _Requirements: 6.4_
 
-- [ ] 7. Tests
+- [x] 7. Tests
   - [x]* 7.1 Property test P09 (`tests/properties/P09-smoothing-bounds.prop.test.ts`)
     - _Requirements: 2.3_
   - [x]* 7.2 Property test P17 (`tests/properties/P17-lasso.prop.test.ts`)
     - _Requirements: 4.2, 4.4_
-  - [ ]* 7.3 Unit tests for `classifyPose` and `aperture` (`tests/unit/vision-pose.test.ts`, referenced in `pose.ts`, not written)
+  - [x]* 7.3 Unit tests for `classifyPose` and `aperture` (`tests/unit/vision-pose.test.ts`, referenced in `pose.ts`, not written)
     - _Requirements: 6.1, 6.2, 6.3_
-  - [ ]* 7.4 Unit tests for `touchpadMap` clamping and a `solveHomography` round trip
+  - [x]* 7.4 Unit tests for `touchpadMap` clamping and a `solveHomography` round trip
     - _Requirements: 2.1, 2.6_
-  - [ ]* 7.5 E2E test: mouse pointing and clicks on the built apps (`tests/e2e/`, not written)
+  - [x]* 7.5 E2E test: mouse pointing and clicks on the built apps (`tests/e2e/`, not written)
     - _Requirements: 1.2, 4.1_

@@ -417,7 +417,7 @@ export class HocusRuntime<S> {
     const el = this.stage.container;
     const fire = (x: number, y: number) => {
       this.scripted = { x, y };
-      el.dispatchEvent(new PointerEvent('pointermove', { clientX: x, clientY: y, pointerType: 'mouse', bubbles: true }));
+      (el.querySelector('canvas') ?? el).dispatchEvent(new PointerEvent('pointermove', { clientX: x, clientY: y, pointerType: 'mouse', bubbles: true }));
     };
     let cur = { x: el.getBoundingClientRect().left + 40, y: el.getBoundingClientRect().bottom - 40 };
     for (let i = 0; i < steps.length && !this.judgeAbort; i++) {
