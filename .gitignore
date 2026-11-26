@@ -62,3 +62,8 @@ test-results/
 .tab-*.png
 .mut-ev.json
 
+
+.diag*.log
+.cmd-*.log
+.h*.log
+

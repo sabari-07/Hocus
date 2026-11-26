@@ -17,12 +17,12 @@
     "dev:kitchen": "npm run dev -w @hocus/kitchen-board",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "node scripts/check-determinism.mjs && node scripts/check-app-size.mjs",
-    "test": "vitest run",
-    "test:unit": "vitest run --project unit",
-    "test:props": "vitest run --project properties",
-    "test:props:fast": "cross-env FC_RUNS=50 vitest run --project properties",
-    "test:props:nightly": "cross-env FC_RUNS=5000 vitest run --project properties",
-    "test:replays": "vitest run --project replays",
+    "test": "node scripts/vitest.mjs run",
+    "test:unit": "node scripts/vitest.mjs run --project unit",
+    "test:props": "node scripts/vitest.mjs run --project properties",
+    "test:props:fast": "cross-env FC_RUNS=50 node scripts/vitest.mjs run --project properties",
+    "test:props:nightly": "cross-env FC_RUNS=5000 node scripts/vitest.mjs run --project properties",
+    "test:replays": "node scripts/vitest.mjs run --project replays",
     "test:e2e": "playwright test",
     "test:mutation": "stryker run",
     "lexicon:lint": "tsx tools/hocus-mcp/src/cli-lint-lexicon.ts",
@@ -32,7 +32,8 @@
     "build": "npm run build --workspaces --if-present",
     "mcp": "tsx tools/hocus-mcp/src/index.ts",
     "check": "npm run lint && npm run typecheck && npm run test",
-    "models": "node scripts/fetch-models.mjs"
+    "models": "node scripts/fetch-models.mjs",
+    "verify": "node scripts/run-all.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "latest",

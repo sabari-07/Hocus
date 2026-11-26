@@ -36,6 +36,13 @@ inclusion: always
 Never run long-lived dev servers in a blocking shell; use a background process.
 Pin dependency versions with `^` on the major that was verified; re-check before submitting.
 
+## Running Vitest
+
+Never call `vitest` or `npx vitest` directly in scripts, hooks or agents: use the npm scripts or
+`node scripts/vitest.mjs <args>`. Kiro starts hook commands with a lower-case drive letter (`c:\`), and Vitest 5 on
+Windows then fails every suite with "Cannot read properties of undefined (reading 'config')". The wrapper fixes the cwd.
+`npm run verify` runs every check (hook gate, check, lexicon lint, sabotage mutants, builds, e2e) the way a hook would.
+
 ## Windows shell gotcha (learned the hard way)
 
 Windows PowerShell 5 `Get-Content`/`Set-Content` read and write ANSI by default and add a BOM with `-Encoding utf8`.

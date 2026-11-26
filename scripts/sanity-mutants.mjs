@@ -25,7 +25,7 @@ for (const m of MUTANTS) {
   try {
     writeFileSync(m.file, original.replace(m.from, m.to));
     try {
-      execSync(`npx vitest run --project properties tests/properties/${m.expect}`, { stdio: 'pipe', env: { ...process.env, FC_RUNS: '200' } });
+      execSync(`node scripts/vitest.mjs run --project properties tests/properties/${m.expect}`, { stdio: 'pipe', env: { ...process.env, FC_RUNS: '200' } });
     } catch {
       killed = true;
     }

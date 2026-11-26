@@ -29,7 +29,7 @@
       "matcher": "(apps|examples)[\\\\/][^\\\\/]+[\\\\/]src[\\\\/]app\\.ts$",
       "action": {
         "type": "agent",
-        "prompt": "An app's defineApp file changed. For every action in it, check: examples exist for en, hi and ta; the action is reachable without voice (menuLabel for object actions, or a button in main.tsx for others); destructive actions that can affect several objects set destructive: true. Run `npx vitest run tests/unit/apps.test.ts` and fix anything that fails. Then run `npm run app-size` and report the line count."
+        "prompt": "An app's defineApp file changed. For every action in it, check: examples exist for en, hi and ta; the action is reachable without voice (menuLabel for object actions, or a button in main.tsx for others); destructive actions that can affect several objects set destructive: true. Run `node scripts/vitest.mjs run tests/unit/apps.test.ts` and fix anything that fails. Then run `npm run app-size` and report the line count."
       }
     },
     {

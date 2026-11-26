@@ -33,6 +33,7 @@ this repository; nothing is staged.
 | 18 | Kiro's own `validate_spec_format` rejected all 30 spec files (missing "Acceptance Criteria" headings, property-block format, dependency graph). | A sub-agent ran the validator | The sub-agent normalised the files; all 30 now pass |
 | 19 | The image viewer returned a cached older screenshot for a changed file, so I reviewed stale pixels twice. | File byte sizes did not match the picture | Copy screenshots to a new filename before viewing |
 | 20 | Echo cards showed the same command twice (the preview and then "Done"). | Screenshot review | A newer message replaces an older one that it starts with |
+| 22 | The turn-end hook reported **all 9 unit suites failing** at the first `describe` with "Cannot read properties of undefined (reading 'config')", while the same command passed in my own shell every time. | The hook output, then `scripts/diag-drive-case.mjs`: Vitest 5 on Windows breaks when the cwd's drive letter is lower case (`c:\` instead of `C:\`), which is how Kiro starts hook commands | `scripts/vitest.mjs` upper-cases the drive letter and starts Vitest; every npm script, hook and the sabotage script now go through it. Verified from both `c:\` and `C:\` |
 | 21 | The dashboard layout (header, two sidebars, footer) hid the 3D world and looked like any admin page. | The user said so, and last year's winner comparison | Full-bleed stage with floating glass panels, speech dock, spell threads, live ghost preview, per-app themes |
 
 ## What the property tests did and did not find
