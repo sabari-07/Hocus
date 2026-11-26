@@ -1,4 +1,6 @@
-# Requirements: dialogue-manager
+# Requirements Document
+
+Spec: dialogue-manager
 
 ## Introduction
 
@@ -22,7 +24,9 @@ implements them and the parts fusion-engine does not cover.
 
 ### Requirement 1: Phases and outcomes
 
-**User story:** As a user, I want to see and hear what Hocus understood before it acts, so that I can stop it when it is wrong.
+**User Story:** As a user, I want to see and hear what Hocus understood before it acts, so that I can stop it when it is wrong.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL always be in exactly one phase: `idle`, `listening`, `preview`, `confirm` or `ask`.
 2. WHEN a `start` speech event arrives while idle, THE SYSTEM SHALL enter `listening`; WHEN `end` or a final transcript arrives, THE SYSTEM SHALL return from `listening` to `idle`; a speech start in any other phase SHALL NOT change the phase.
@@ -33,7 +37,9 @@ implements them and the parts fusion-engine does not cover.
 
 ### Requirement 2: Ticks and timers
 
-**User story:** As a developer, I want timers to depend only on event times, so that replays expire the same way they did live.
+**User Story:** As a developer, I want timers to depend only on event times, so that replays expire the same way they did live.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL keep `state.t` as the largest event time seen so far and SHALL compare phase deadlines (`until`) only against it.
 2. WHEN a tick reaches the end of a preview, THE SYSTEM SHALL execute the pending command.
@@ -43,7 +49,9 @@ implements them and the parts fusion-engine does not cover.
 
 ### Requirement 3: Confirm, cancel and choose by key, voice and gesture
 
-**User story:** As a user, I want the same answers to work by key, by voice and by hand gesture, so that I can use whichever is free.
+**User Story:** As a user, I want the same answers to work by key, by voice and by hand gesture, so that I can use whichever is free.
+
+#### Acceptance Criteria
 
 1. WHEN the user confirms (Enter, "yes", a held thumbs-up, or the Run / Confirm button) in `preview` or `confirm`, THE SYSTEM SHALL execute the pending command; in other phases a confirm SHALL do nothing.
 2. WHEN the user cancels (Esc, "stop" / "cancel" / "no", a held open palm, or the Cancel button) in `preview`, `confirm` or `ask`, THE SYSTEM SHALL return to idle, clear highlights, announce "Cancelled." and play the `cancel` cue.
@@ -54,7 +62,9 @@ implements them and the parts fusion-engine does not cover.
 
 ### Requirement 4: Execution, undo and redo
 
-**User story:** As a user, I want every change to be undoable, so that trying things is safe.
+**User Story:** As a user, I want every change to be undoable, so that trying things is safe.
+
+#### Acceptance Criteria
 
 1. WHEN a command executes, THE SYSTEM SHALL call the app reducer with the bound arguments and, for actions that mutate (the default), push the previous document onto the undo stack (at most 100 entries) and clear the redo stack.
 2. WHERE an action sets `mutates: false`, THE SYSTEM SHALL apply the reducer's state without an undo entry.
@@ -64,7 +74,9 @@ implements them and the parts fusion-engine does not cover.
 
 ### Requirement 5: Repair
 
-**User story:** As a user, I want to say "no, the other one" or "not that" when Hocus picked the wrong thing, so that fixing a mistake takes one phrase.
+**User Story:** As a user, I want to say "no, the other one" or "not that" when Hocus picked the wrong thing, so that fixing a mistake takes one phrase.
+
+#### Acceptance Criteria
 
 1. WHEN "no, the other one" or "not that" follows a pending preview or confirm, THE SYSTEM SHALL drop the pending command; WHEN it follows an executed action that mutated the document, THE SYSTEM SHALL undo that action first.
 2. WHEN the user says "no, the other one", THE SYSTEM SHALL exclude the object chosen for the first pointing-bound word and force the best remaining candidate for that slot, then preview again.
@@ -74,7 +86,9 @@ implements them and the parts fusion-engine does not cover.
 
 ### Requirement 6: Calibration, configuration and language events
 
-**User story:** As a user, I want my measured delay, settings and language to take effect at once and to replay the same way.
+**User Story:** As a user, I want my measured delay, settings and language to take effect at once and to replay the same way.
+
+#### Acceptance Criteria
 
 1. WHEN a `calibrate` event arrives, THE SYSTEM SHALL set `lagMs` clamped to [`lagMin`, `lagMax`] and emit `calibrated`.
 2. WHEN a `config` event arrives, THE SYSTEM SHALL apply the patch through `patchConfig`, which clamps every number to safe bounds.
@@ -83,7 +97,9 @@ implements them and the parts fusion-engine does not cover.
 
 ### Requirement 7: Pointing answers, direct commands and "what was that?"
 
-**User story:** As a user, I want to answer by pointing and to use menus without voice, so that every path reaches the same result.
+**User Story:** As a user, I want to answer by pointing and to use menus without voice, so that every path reaches the same result.
+
+#### Acceptance Criteria
 
 1. WHERE the app declares `pointAction`, WHEN the user says only "this one" or "that" outside an ask, THE SYSTEM SHALL run that action with the pointing word in its first object slot, through normal resolution and preview.
 2. WHEN "this one" is said outside an ask and the app has no `pointAction`, THE SYSTEM SHALL do nothing.

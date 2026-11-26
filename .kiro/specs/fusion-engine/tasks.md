@@ -1,4 +1,10 @@
-# Implementation plan: fusion-engine
+# Implementation Plan: fusion-engine
+
+## Overview
+
+Tasks for the fusion-engine spec. Checkbox state reflects the current code; each task cites the requirements it covers. Tasks marked with `*` are optional test tasks.
+
+## Tasks
 
 - [x] 1. Data contracts and validation
   - Write `types.ts` (events, samples with frozen hits, slots, bindings, resolutions, decision records, effects)
@@ -63,3 +69,116 @@
 - [x] 9. Mutation checks
   - `scripts/sanity-mutants.mjs` (hand-picked) and `stryker.config.json` (full)
   - _Requirements: all_
+
+- [x] 10. Live preview
+  - [x] 10.1 `engine.preview(state, text, t, typed?)` runs the same parser, timing and resolver on a partial or typed transcript, without changing state or emitting effects
+    - _Requirements: 7.4, 7.5_
+  - [x] 10.2 `engine.liveEvidence(state, t)` returns the evidence ranking for a hypothetical pointing word
+    - _Requirements: 7.6_
+  - [x]* 10.3 Property test P21 (`tests/properties/P21-preview-honest.prop.test.ts`)
+    - _Requirements: 7.4, 7.5, 7.6_
+
+## Task Dependency Graph
+
+Tasks build on each other in numeric order, so each wave holds one top-level task. Sub-tasks of a task run in its wave.
+
+```mermaid
+flowchart LR
+  T1
+  T1 --> T2
+  T2 --> T3
+  T3 --> T4
+  T4 --> T5
+  T5 --> T6
+  T6 --> T7
+  T7 --> T8
+  T8 --> T9
+  T9 --> T10
+```
+
+```json
+{
+  "waves": [
+    {
+      "id": 0,
+      "tasks": [
+        "1"
+      ]
+    },
+    {
+      "id": 1,
+      "tasks": [
+        "2"
+      ]
+    },
+    {
+      "id": 2,
+      "tasks": [
+        "3.1",
+        "3.2",
+        "3.3"
+      ]
+    },
+    {
+      "id": 3,
+      "tasks": [
+        "4.1",
+        "4.2"
+      ]
+    },
+    {
+      "id": 4,
+      "tasks": [
+        "5.1",
+        "5.2",
+        "5.3",
+        "5.4"
+      ]
+    },
+    {
+      "id": 5,
+      "tasks": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5",
+        "6.6"
+      ]
+    },
+    {
+      "id": 6,
+      "tasks": [
+        "7.1",
+        "7.2"
+      ]
+    },
+    {
+      "id": 7,
+      "tasks": [
+        "8.1",
+        "8.2"
+      ]
+    },
+    {
+      "id": 8,
+      "tasks": [
+        "9"
+      ]
+    },
+    {
+      "id": 9,
+      "tasks": [
+        "10.1",
+        "10.2",
+        "10.3"
+      ]
+    }
+  ]
+}
+```
+
+## Notes
+
+- Requirement ids refer to `requirements.md` in this folder and are cited by test titles; do not renumber them.
+- Do not mark a task done until its code and tests exist.

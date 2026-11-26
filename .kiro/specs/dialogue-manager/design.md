@@ -1,4 +1,4 @@
-# Design: dialogue-manager
+# Design Document
 
 ## Overview
 
@@ -25,8 +25,11 @@ stateDiagram-v2
   ask --> idle: cancel / neither / tick at until (quiet)
 ```
 
-## Components
+## Architecture
 
+The dialogue manager is part of `engine.step` in `packages/core/src/engine.ts`: a phase machine driven only by event times. See Overview for the phases and Components for the responsibilities.
+
+## Components and Interfaces
 | Function (`engine.ts`) | Responsibility | Requirements |
 |---|---|---|
 | `step` | Advances `state.t`, routes events (`pointer`, `speech`, `select`, `lasso`, `key`, `gesture`, `tick`, `calibrate`, `config`, `lang`, `command`) | 1.1, 2.1, 6 |
@@ -79,26 +82,60 @@ next candidate (`otherOne`) or resolves again (`notThat`). For a spoken command 
 `onCommand` is the keyboard and mouse path for menus. It does not resolve and does not record a
 `DecisionRecord`; it collects ids from object slots, checks the confirmation rule and executes.
 
-## Correctness properties
+## Data Models
 
-| Id | Property | Requirements |
-|---|---|---|
-| P08 | Undo k times restores the document from k steps ago; redo walks back | 4.1, 4.4 (fusion-engine 5.4) |
-| P12 | Destructive bulk actions never run without confirmation, including on timeout | 2.4, 3.6 (fusion-engine 5.5) |
-| P19 | Names stay unique and consistent through undo and redo | 4.5 (fusion-engine 4.3, 4.4) |
-| P20 | Lag stays in bounds and converges after repairs | 5.5, 6.1 (fusion-engine 6.5, 6.6) |
-| P06 | Same event log, same states, effects and decisions (keys and ticks included) | 2.1 |
-| P13 | Voice, typed and menu paths give the same document | 7.3 (app-sdk 3.2) |
+State is `CoreState<S>` (`packages/core/src/engine.ts`). Inputs are `HocusEvent` values, outputs are `Effect` values and `DecisionRecord`s, all defined in `packages/core/src/types.ts`; tunable values are in `FusionConfig` (`packages/core/src/config.ts`).
+
+## Correctness Properties
+
+### Property 1: P08 Undo k times restores the document from k steps ago; redo walks back
+
+**Validates: Requirements 4.1, 4.4**
+
+Full reference: 4.1, 4.4 (fusion-engine 5.4)
+
+### Property 2: P12 Destructive bulk actions never run without confirmation, including on timeout
+
+**Validates: Requirements 2.4, 3.6**
+
+Full reference: 2.4, 3.6 (fusion-engine 5.5)
+
+### Property 3: P19 Names stay unique and consistent through undo and redo
+
+**Validates: Requirements 4.5**
+
+Full reference: 4.5 (fusion-engine 4.3, 4.4)
+
+### Property 4: P20 Lag stays in bounds and converges after repairs
+
+**Validates: Requirements 5.5, 6.1**
+
+Full reference: 5.5, 6.1 (fusion-engine 6.5, 6.6)
+
+### Property 5: P06 Same event log, same states, effects and decisions (keys and ticks included)
+
+**Validates: Requirements 2.1**
+
+### Property 6: P13 Voice, typed and menu paths give the same document
+
+**Validates: Requirements 7.3**
+
+Full reference: 7.3 (app-sdk 3.2)
+
 
 `tests/unit/engine.test.ts` covers preview then execute after 600 ms, cancel in preview, ask answered by "2",
 "no, the other one", destructive confirmation that never runs on timeout, naming, and the typed path.
 
-## Error handling
+## Error Handling
 
 - Keys, gestures and control phrases that do not apply to the current phase return the state unchanged.
 - An ask option index out of range is ignored.
 - Every path that does not execute announces why, except the quiet ask expiry (fusion-engine 5.8) and a bare
   "this one" outside an ask when the app has no `pointAction`.
+
+## Testing Strategy
+
+Property tests are listed under Correctness Properties. `npm run check` runs the determinism lint, the app-size budget, the typecheck and all tests (unit, properties, replays).
 
 ## Known gaps
 

@@ -44,6 +44,10 @@ export class Stage {
   readonly labels = new CSS2DRenderer();
   readonly container: HTMLElement;
   reducedMotion: boolean;
+  private baseFov: number;
+  /** True while the WebGL context is lost (the scene is not drawing). */
+  contextLost = false;
+  private lossCbs = new Set<(lost: boolean) => void>();
   private composer: EffectComposer;
   private outlines: Record<HighlightMode, OutlinePass>;
   private registry = new Map<string, Registered>();
@@ -56,6 +60,9 @@ export class Stage {
   private resizeObs: ResizeObserver;
   private margin: number;
   private highlightIds: Record<HighlightMode, string[]> = { hover: [], locked: [], ambiguous: [] };
+  /** Evidence auras: a soft additive halo per object whose opacity follows live evidence. */
+  private auras = new Map<string, { sprite: THREE.Sprite; target: number }>();
+  private auraTexture: THREE.Texture | null = null;
 
   constructor(container: HTMLElement, opts: StageOptions) {
     this.container = container;
@@ -75,6 +82,17 @@ export class Stage {
     canvas.setAttribute('aria-label', opts.label);
     canvas.className = 'hx-canvas';
     container.appendChild(canvas);
+    // GPU drivers can drop the WebGL context (sleep, driver reset, too many contexts). three.js restores it by
+    // itself; we only tell the UI so the user sees a message instead of a blank stage.
+    canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault();
+      this.contextLost = true;
+      for (const cb of this.lossCbs) cb(true);
+    });
+    canvas.addEventListener('webglcontextrestored', () => {
+      this.contextLost = false;
+      for (const cb of this.lossCbs) cb(false);
+    });
 
     this.labels.setSize(w, h);
     this.labels.domElement.className = 'hx-labels';
@@ -82,7 +100,8 @@ export class Stage {
     container.appendChild(this.labels.domElement);
 
     this.scene.background = new THREE.Color(opts.background ?? PALETTE.bg);
-    this.camera = new THREE.PerspectiveCamera(opts.fov ?? 45, w / h, 0.05, 500);
+    this.baseFov = opts.fov ?? 45;
+    this.camera = new THREE.PerspectiveCamera(this.baseFov, w / h, 0.05, 500);
     const cp = opts.cameraPosition ?? [0, 4, 10];
     this.camera.position.set(cp[0], cp[1], cp[2]);
     const la = opts.lookAt ?? [0, 0, 0];
@@ -119,14 +138,22 @@ export class Stage {
     return () => this.frameCbs.delete(cb);
   }
 
+  /** Be told when the GPU context is lost (`true`) and restored (`false`). */
+  onContextLoss(cb: (lost: boolean) => void): () => void {
+    this.lossCbs.add(cb);
+    return () => this.lossCbs.delete(cb);
+  }
+
   start() {
     if (this.running) return;
     this.running = true;
     this.last = performance.now();
     this.renderer.setAnimationLoop((now: number) => {
-      const dt = Math.min(0.1, (now - this.last) / 1000);
+      // Never negative (the first rAF timestamp can precede `last`) and never a huge jump after a stall.
+      const dt = Math.min(0.1, Math.max(0, (now - this.last) / 1000));
       this.last = now;
       for (const cb of this.frameCbs) cb(dt, now);
+      this.updateAuras(dt);
       this.composer.render(dt);
       this.labels.render(this.scene, this.camera);
     });
@@ -149,6 +176,10 @@ export class Stage {
     const w = Math.max(1, this.container.clientWidth);
     const h = Math.max(1, this.container.clientHeight);
     this.camera.aspect = w / h;
+    // Portrait screens: widen the vertical FOV so the scene's width still fits (capped to avoid fisheye).
+    const widen = Math.min(1.9, Math.max(1, 1.2 / this.camera.aspect));
+    const half = Math.tan(THREE.MathUtils.degToRad(this.baseFov) / 2) * widen;
+    this.camera.fov = THREE.MathUtils.radToDeg(Math.atan(half)) * 2;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(w, h);
     this.composer.setSize(w, h);
@@ -353,6 +384,56 @@ export class Stage {
 
   clearChips(kind?: 'badge') {
     for (const [id, c] of this.chips) if (!kind || c.element.classList.contains('hx-chip--badge')) this.setChip(id, null);
+  }
+
+  /**
+   * Show how strongly each object is the current referent of "that" (0..1). Objects not in the map fade out.
+   * Driven by `engine.liveEvidence` while the user is speaking or typing.
+   */
+  setAura(strengths: Record<string, number>) {
+    for (const [id, a] of this.auras) a.target = strengths[id] ?? 0;
+    for (const [id, v] of Object.entries(strengths)) {
+      if (this.auras.has(id) || v <= 0.01 || !this.registry.has(id)) continue;
+      this.auraTexture ??= (() => {
+        const c = document.createElement('canvas');
+        c.width = c.height = 128;
+        const g = c.getContext('2d')!;
+        const grd = g.createRadialGradient(64, 64, 8, 64, 64, 64);
+        grd.addColorStop(0, 'rgba(255,200,120,0.9)');
+        grd.addColorStop(0.45, 'rgba(255,179,71,0.35)');
+        grd.addColorStop(1, 'rgba(255,179,71,0)');
+        g.fillStyle = grd;
+        g.fillRect(0, 0, 128, 128);
+        const t = new THREE.CanvasTexture(c);
+        t.colorSpace = THREE.SRGBColorSpace;
+        return t;
+      })();
+      const sprite = new THREE.Sprite(
+        new THREE.SpriteMaterial({ map: this.auraTexture, transparent: true, opacity: 0, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending }),
+      );
+      sprite.renderOrder = 999;
+      this.scene.add(sprite);
+      this.auras.set(id, { sprite, target: v });
+    }
+  }
+
+  private updateAuras(dt: number) {
+    for (const [id, a] of this.auras) {
+      const reg = this.registry.get(id);
+      const mat = a.sprite.material as THREE.SpriteMaterial;
+      if (!reg) {
+        this.scene.remove(a.sprite);
+        mat.dispose();
+        this.auras.delete(id);
+        continue;
+      }
+      const s = this.sphereOf(reg);
+      a.sprite.position.copy(s.center);
+      a.sprite.scale.setScalar(s.radius * 3.2);
+      const goal = a.target * 0.85;
+      mat.opacity = this.reducedMotion ? goal : THREE.MathUtils.damp(mat.opacity, goal, 10, dt);
+      a.sprite.visible = mat.opacity > 0.01;
+    }
   }
 
   /** Keep chips glued to moving objects. Call from an app frame callback if objects move. */

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCore, useRuntime, useUi } from '../hooks.ts';
 import { t } from '../i18n/index.ts';
 
@@ -7,7 +7,7 @@ export function Wisp() {
   const p = useUi((s) => s.pointer);
   const speech = useUi((s) => s.speech);
   const core = useCore();
-  if (!p || !p.active) return <div className="hx-wisp" data-state="hidden" aria-hidden="true" />;
+  if (!p || !p.active || (p.source === 'mouse' && p.pose === 'rest')) return <div className="hx-wisp" data-state="hidden" aria-hidden="true" />;
   const locked = core.phase.kind === 'preview' || core.phase.kind === 'confirm';
   const state = speech === 'listening' ? 'listening' : locked ? 'locked' : p.topHit ? 'targeting' : 'tracking';
   return (
@@ -101,12 +101,11 @@ export function LiveRegions() {
   );
 }
 
+/** Warnings and info from the runtime (camera blocked, hand lost…). Spoken results go to <Echoes/>. */
 export function Toasts() {
   const toasts = useUi((s) => s.toasts);
-  const a = useUi((s) => s.announcement);
   return (
     <div className="hx-toasts" aria-hidden="true">
-      {a && <AnnouncementToast key={a.id} text={a.text} />}
       {toasts.map((x) => (
         <div key={x.id} className={`hx-toast hx-toast--${x.level}`}>
           {x.text}
@@ -116,15 +115,31 @@ export function Toasts() {
   );
 }
 
-function AnnouncementToast({ text }: { text: string }) {
-  const ref = useRef<HTMLDivElement>(null);
+interface Echo {
+  id: number;
+  text: string;
+  kind: 'polite' | 'assertive';
+}
+
+/** What Hocus just said, as a short stack of glass cards that fade after a few seconds. aria-hidden: LiveRegions announces it. */
+export function Echoes() {
+  const a = useUi((s) => s.announcement);
+  const [items, setItems] = useState<Echo[]>([]);
   useEffect(() => {
-    const id = setTimeout(() => ref.current && (ref.current.style.display = 'none'), 3200);
+    if (!a) return;
+    // "Make Pumpkin 1 bigger" (preview) is followed by "Make Pumpkin 1 bigger. Done…": show only the newest.
+    setItems((q) => [...q.filter((x) => x.id !== a.id && !a.text.startsWith(x.text)), { id: a.id, text: a.text, kind: a.politeness }].slice(-3));
+    const id = setTimeout(() => setItems((q) => q.filter((x) => x.id !== a.id)), a.politeness === 'assertive' ? 7000 : 4800);
     return () => clearTimeout(id);
-  }, []);
+  }, [a]);
   return (
-    <div ref={ref} className="hx-toast">
-      {text}
+    <div className="hx-echoes" aria-hidden="true">
+      {items.map((e) => (
+        <div key={e.id} className="hx-echo hx-glass" data-kind={e.kind}>
+          <span className="hx-echo__icon">{e.kind === 'assertive' ? '❓' : '✧'}</span>
+          <span>{e.text}</span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -135,8 +150,10 @@ export function JudgeCaption() {
   if (!j) return null;
   return (
     <div className="hx-caption" role="status">
-      <span className="hx-mono hx-small">
-        {j.step}/{j.total}
+      <span className="hx-caption__dots" aria-label={`Step ${j.step} of ${j.total}`}>
+        {Array.from({ length: j.total }, (_, i) => (
+          <i key={i} data-on={i < j.step} />
+        ))}
       </span>
       <span>{j.caption}</span>
       <button className="hx-btn hx-btn--primary" onClick={() => rt.stopJudge()}>

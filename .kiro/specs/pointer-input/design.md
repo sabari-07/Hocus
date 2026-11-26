@@ -1,4 +1,4 @@
-# Design: pointer-input
+# Design Document
 
 ## Overview
 
@@ -23,8 +23,11 @@ flowchart LR
   HUB -->|shift-drag or hand loop -> selectInLoop| D
 ```
 
-## Components
+## Architecture
 
+Sources (mouse, touch, hand, head) feed one pointer hub in `packages/input/src/hub.ts`. Hit testing against the 3D scene happens at capture time in `packages/three/src/stage.ts`, and vision trackers live in `packages/vision/src/trackers.ts`. See Overview for the flow.
+
+## Components and Interfaces
 | File | Responsibility | Requirements |
 |---|---|---|
 | `packages/core/src/smoothing.ts` | `oneEuroInit`, `oneEuroStep` (pure, caller passes `t`), `OneEuro2D` wrapper with `setParams`, `reset`, `filter` | 2.3, 2.4 |
@@ -34,6 +37,7 @@ flowchart LR
 | `packages/three/src/stage.ts` | `Stage.hitTest`, `screenOf`, `projectRects`, `toScreen`, `register`, `addSurface` | 3, 4.4 |
 | `packages/vision/src/trackers.ts` | `VisionTracker.start`, `stop`, `setHead`, `onStatus`, frame `loop`; `GestureLatch.feed` | 5, 6.4 |
 | `packages/vision/src/pose.ts` | `classifyPose`, `aperture`, `pointerAnchor` (pure geometry) | 5.5, 6.1-6.3 |
+| `packages/vision/src/pose.ts` (`detectHeadGesture`) and `trackers.ts` (`onHeadGesture`, 1.8 s cooldown) | Nod = confirm, shake = cancel from the nose path | 7.1, 7.2, 7.3, 7.4 |
 | `packages/ui/src/runtime.ts` | `attachStage` creates the hub; `onHand` feeds hub and latch, hand-lost toast; `applySmoothing`; camera status toasts | 2.5, 5.4, 6.4, 6.5 |
 
 ## Parameters
@@ -80,19 +84,37 @@ never leave the range of the inputs (P09). `dt` is floored at 1 ms.
 uses finger extension relative to the wrist. Middle-finger state is ignored for `point`, because many people
 half-curl it.
 
-## Correctness properties
+## Data Models
 
-| Id | Property | Requirements |
-|---|---|---|
-| P09 | Every One Euro output lies within [min, max] of the inputs seen so far, for any parameters | 2.3 |
-| P17 | A lasso selects only objects mostly inside the loop; objects outside the loop's bounding box are never selected | 4.2, 4.4 (fusion-engine 3.5) |
+The data contract is `PointerSample` with `Hit`, `SurfacePoint`, `PointerSource` and `PointerPose` in `packages/core/src/types.ts`; its Zod schema is `PointerSampleSchema` in `packages/core/src/schemas.ts`.
 
-## Error handling
+## Correctness Properties
+
+### Property 1: P09 Every One Euro output lies within [min, max] of the inputs seen so far, for any parameters
+
+**Validates: Requirements 2.3**
+
+### Property 2: P17 A lasso selects only objects mostly inside the loop; objects outside the loop's bounding box are never selected
+
+**Validates: Requirements 4.2, 4.4**
+
+Full reference: 4.2, 4.4 (fusion-engine 3.5)
+
+
+### Property 3: P22 A clear vertical head oscillation is a nod and a clear horizontal one is a shake; steady drift never fires
+
+**Validates: Requirements 7.1, 7.2, 7.3**
+
+## Error Handling
 
 - Camera errors map to `denied`, `no-camera` or `error`; the runtime shows a toast and the mouse keeps working.
 - GPU delegate failures fall back to the CPU delegate.
 - A tracker that stops reporting is treated as absent after 500 ms; its filter is reset on `null` frames.
 - `solveHomography` returns `null` for degenerate point sets.
+
+## Testing Strategy
+
+Property tests are listed under Correctness Properties. `npm run check` runs the determinism lint, the app-size budget, the typecheck and all tests (unit, properties, replays).
 
 ## Known gaps
 

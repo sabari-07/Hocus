@@ -11,9 +11,10 @@ mistakes.
 
 ## Specs (Kiro IDE)
 
-- `.kiro/specs/fusion-engine/` was written **before** the core code: EARS requirements (7 requirements, 39
-  criteria), a design with every parameter, and a correctness-property table (P01–P20) that maps each property to
+- `.kiro/specs/fusion-engine/` was written **before** the core code: EARS requirements (7 requirements, 42
+  criteria after the live-preview additions), a design with every parameter, and a correctness-property table (P01–P20) that maps each property to
   requirement ids. Property test titles cite those ids.
+- All 30 spec files (10 specs × requirements, design, tasks) pass Kiro's own `validate_spec_format`. A first run of the validator rejected every file; a sub-agent normalised them without changing requirement ids.
 - Nine more specs (`lexicon-parser`, `pointer-input`, `speech-input`, `dialogue-manager`, `app-sdk`,
   `room-designer`, `planet-explorer`, `hocus-lab`, `kitchen-board`). A sub-agent wrote them from the code and listed
   every gap between plan and code; the gaps were fixed or left as unchecked tasks (see `docs/kiro-journal.md`).
@@ -56,11 +57,18 @@ Eight files. The two that changed Kiro's output most:
 
 ## Property-based testing
 
-- 20 properties, 23 tests, 100 cases each on every run, 5,000 nightly.
+- 22 properties (27 tests), 100 cases each on every run, 5,000 nightly. P21 guards the live preview; P22 guards the head-gesture classifier.
 - All passed on the first run, so we proved they can fail: `scripts/sanity-mutants.mjs` breaks seven rules one at
   a time and each named property catches its mutant. One mutant first **survived** (removing the type constraint),
   which exposed a missing property; it was added to P15.
 - Stryker mutation score for the fusion math: `docs/mutation.md`.
+
+## Live explanation and head gestures (added after review)
+
+- Requirements 7.4 to 7.6 of the fusion-engine spec added `engine.preview` and `engine.liveEvidence`: pure functions that
+  say what a partial transcript would bind to. The UI draws them as a ghost command, evidence glow and spell threads.
+  Property P21 checks that a preview never changes state and that a typed command resolves exactly as previewed.
+- Requirement 7 of the pointer-input spec added nod = confirm and shake = cancel (`detectHeadGesture`, property P22).
 
 ## Powers and Crew
 

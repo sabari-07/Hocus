@@ -11,6 +11,7 @@ import {
   type FusionConfig,
   type HocusEvent,
   type LangCode,
+  type LivePreview,
   type ReplayFile,
   type SpeechEvent,
 } from '@hocus/core';
@@ -35,6 +36,8 @@ export interface Settings {
   alwaysListening: boolean;
   proposer: boolean;
   headPointer: boolean;
+  /** Nod = confirm, shake = cancel (runs face tracking even when the head is not the pointer). */
+  headGestures: boolean;
   onboarded: boolean;
 }
 
@@ -52,6 +55,7 @@ export const DEFAULT_SETTINGS: Settings = {
   alwaysListening: false,
   proposer: false,
   headPointer: false,
+  headGestures: false,
   onboarded: false,
 };
 
@@ -85,6 +89,11 @@ export interface UiState {
   judge: { playing: boolean; caption: string; step: number; total: number } | null;
   hand: HandFrame | null;
   selectedDecision: number | null;
+  /** Text in the typed box (not yet sent); previewed live. */
+  draft: string;
+  /** What the current interim transcript or draft would do if it were final now. */
+  live: { text: string; preview: LivePreview } | null;
+  panels: { left: boolean; right: boolean; log: boolean };
 }
 
 /** An app's 3D scene. `sync` is called after every document change. */
@@ -130,6 +139,7 @@ export class HocusRuntime<S> {
   readonly proposer = new Proposer();
   private listeners = new Set<() => void>();
   private tickTimer: ReturnType<typeof setInterval>;
+  private liveTimer: ReturnType<typeof setInterval>;
   private latch = new GestureLatch();
   private handLostTimer: ReturnType<typeof setTimeout> | null = null;
   private judgeAbort = false;
@@ -137,6 +147,7 @@ export class HocusRuntime<S> {
 
   constructor(readonly app: AppDefinition<S>, opts: { config?: Partial<FusionConfig> } = {}) {
     const settings = loadSettings();
+    const wide = typeof innerWidth === 'number' && innerWidth >= 1200;
     this.engine = createEngine(app, opts.config);
     this.state = this.engine.initial({ lang: settings.lang, config: { lagMs: settings.lagMs, minEvidence: settings.dwell } });
     this.ui = createStore<UiState>(() => ({
@@ -157,6 +168,9 @@ export class HocusRuntime<S> {
       judge: null,
       hand: null,
       selectedDecision: null,
+      draft: '',
+      live: null,
+      panels: { left: wide, right: wide, log: false },
     }));
     setUiLang(settings.lang);
     this.voice.enabled = settings.voiceFeedback;
@@ -178,12 +192,47 @@ export class HocusRuntime<S> {
       if (s === 'no-camera') this.toast(t('noCamera'), 'warning');
     });
     this.vision.onHand = (f) => this.onHand(f);
-    this.vision.onHead = (f) => this.hub?.feedHead(f);
+    // The head only steers the pointer when "head pointer" is on; gestures work either way.
+    this.vision.onHead = (f) => {
+      if (this.settings.headPointer) this.hub?.feedHead(f);
+    };
+    this.vision.onHeadGesture = (g) => {
+      this.dispatch({ type: 'gesture', t: performance.now(), gesture: g });
+      this.toast(g === 'confirm' ? '🙂 Nod: confirmed' : '🙂 Shake: cancelled');
+    };
 
     this.tickTimer = setInterval(() => {
       const k = this.state.phase.kind;
       if (k === 'preview' || k === 'ask' || k === 'confirm') this.dispatch({ type: 'tick', t: performance.now() });
     }, 50);
+    this.liveTimer = setInterval(() => this.updateLive(), 100);
+  }
+
+  /**
+   * Live feedback, 10 times a second, through the engine's pure `preview` and `liveEvidence`:
+   * while speaking or typing, the scene shows which object "that" would mean right now and the
+   * speech bar shows the command Hocus would run.
+   */
+  private updateLive() {
+    if (!this.stage) return;
+    const ui = this.ui.getState();
+    const listening = ui.speech === 'listening' || !!ui.judge;
+    const text = ui.interim || ui.draft;
+    const busy = this.state.phase.kind !== 'idle' && this.state.phase.kind !== 'listening';
+    if ((!listening && !ui.draft) || busy) {
+      this.stage.setAura({});
+      if (ui.live) this.ui.setState({ live: null });
+      return;
+    }
+    const now = performance.now();
+    const ranked = this.engine.liveEvidence(this.state, now - 120);
+    const best = ranked[0]?.evidence ?? 0;
+    const scale = Math.max(best, this.state.config.minEvidence * 2);
+    const auras: Record<string, number> = {};
+    for (const c of ranked.slice(0, 4)) if (c.evidence >= this.state.config.minEvidence * 0.3) auras[c.id] = Math.min(1, c.evidence / scale);
+    this.stage.setAura(auras);
+    const preview = text ? this.engine.preview(this.state, text, now, !ui.interim) : null;
+    this.ui.setState({ live: preview && text ? { text, preview } : null });
   }
 
   // ------------------------------------------------------------ wiring
@@ -206,6 +255,7 @@ export class HocusRuntime<S> {
 
   detach() {
     clearInterval(this.tickTimer);
+    clearInterval(this.liveTimer);
     this.hub?.dispose();
     this.vision.stop();
     this.recognizer.abort();
@@ -300,6 +350,7 @@ export class HocusRuntime<S> {
 
   typed(text: string) {
     const trimmed = text.trim();
+    this.ui.setState({ draft: '', live: null });
     if (!trimmed) return;
     this.dispatch({ type: 'speech', speech: { t: performance.now(), kind: 'typed', text: trimmed, lang: this.state.lang } });
   }
@@ -319,7 +370,7 @@ export class HocusRuntime<S> {
   // ------------------------------------------------------------ camera
 
   async startCamera() {
-    await this.vision.start({ hand: true, head: this.settings.headPointer });
+    await this.vision.start({ hand: true, head: this.settings.headPointer || this.settings.headGestures });
   }
 
   stopCamera() {
@@ -367,7 +418,7 @@ export class HocusRuntime<S> {
       if (patch.alwaysListening) this.recognizer.start();
       else this.recognizer.stop();
     }
-    if (patch.headPointer !== undefined) this.vision.setHead(patch.headPointer);
+    if (patch.headPointer !== undefined || patch.headGestures !== undefined) this.vision.setHead(settings.headPointer || settings.headGestures);
     if (patch.reducedMotion !== undefined && this.stage) this.stage.reducedMotion = patch.reducedMotion;
     for (const fn of this.listeners) fn();
   }

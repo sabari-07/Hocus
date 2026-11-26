@@ -13,6 +13,8 @@ const JUDGE: JudgeStep[] = [
 createRoot(document.getElementById('root')!).render(
   <HocusApp
     app={kitchenApp}
+    theme="board"
+    rightLabel="Cards"
     stage={{ label: 'A 3D recipe board with ingredient and step cards', cameraPosition: [0, 0.4, 11], lookAt: [0, 0.5, 0], fov: 48, bloom: false }}
     createScene={createKitchenScene}
     judge={JUDGE}

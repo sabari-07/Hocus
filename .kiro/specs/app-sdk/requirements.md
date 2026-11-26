@@ -1,4 +1,6 @@
-# Requirements: app-sdk
+# Requirements Document
+
+Spec: app-sdk
 
 ## Introduction
 
@@ -23,7 +25,9 @@ file. The skeleton supplies everything else: the React shell, the runtime that w
 
 ### Requirement 1: The app definition contract
 
-**User story:** As an app developer, I want to describe my app as data plus pure reducers, so that the skeleton can do the parsing, binding, safety and undo for me.
+**User Story:** As an app developer, I want to describe my app as data plus pure reducers, so that the skeleton can do the parsing, binding, safety and undo for me.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL let an app declare `id`, `title`, `initialState`, `selectables(state)`, `actions`, and optionally `entities`, `vocabulary` per language and `pointAction`, through `defineApp`.
 2. IF an action is named `undo`, `redo`, `name`, `yes` or `cancel`, THEN `defineApp` SHALL throw an error naming the app and the action.
@@ -34,7 +38,9 @@ file. The skeleton supplies everything else: the React shell, the runtime that w
 
 ### Requirement 2: Shell and runtime
 
-**User story:** As an app developer, I want one component that gives my app the full Hocus interface, so that my app folder holds only behaviour and visuals.
+**User Story:** As an app developer, I want one component that gives my app the full Hocus interface, so that my app folder holds only behaviour and visuals.
+
+#### Acceptance Criteria
 
 1. WHEN an app renders `<HocusApp app stage createScene judge links …>`, THE SYSTEM SHALL create one `HocusRuntime`, create a `Stage` in the stage area, call `createScene(stage, runtime)`, attach the pointer hub and start rendering.
 2. THE SYSTEM SHALL call `SceneController.sync(state, runtime)` after every document change, `onExecuted(action, args, ids)` for every executed action, and `dispose` on unmount.
@@ -45,7 +51,9 @@ file. The skeleton supplies everything else: the React shell, the runtime that w
 
 ### Requirement 3: Keyboard and mouse parity
 
-**User story:** As a user who cannot or does not want to use a camera or a microphone, I want every feature through keyboard and mouse, so that Hocus is usable by everyone.
+**User Story:** As a user who cannot or does not want to use a camera or a microphone, I want every feature through keyboard and mouse, so that Hocus is usable by everyone.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL list every selectable in the scene list as a button with arrow-key roving focus; click SHALL select and Shift-, Ctrl- or Cmd-click SHALL add to the selection.
 2. THE SYSTEM SHALL make everything doable by voice and pointing doable with keyboard and mouse only: voice with pointing, click with a typed command, and the actions menu SHALL produce the same document.
@@ -55,7 +63,9 @@ file. The skeleton supplies everything else: the React shell, the runtime that w
 
 ### Requirement 4: Help, settings, onboarding and landing
 
-**User story:** As a first-time user, I want to learn what to say and to set Hocus up for my body and device, so that it works for me in under a minute.
+**User Story:** As a first-time user, I want to learn what to say and to set Hocus up for my body and device, so that it works for me in under a minute.
+
+#### Acceptance Criteria
 
 1. THE Spellbook SHALL list every action's examples in the current language (English if none) with search and a "Try it" button, the basic phrases for the language with the key map, and the language list with a note that Hindi and Tamil are pending native review.
 2. WHEN "Try it" is used while nothing is selected, THE SYSTEM SHALL select the first selectable and then send the example as a typed command.
@@ -65,7 +75,9 @@ file. The skeleton supplies everything else: the React shell, the runtime that w
 
 ### Requirement 5: Judge Mode and kiosk mode
 
-**User story:** As a judge or a museum visitor, I want a demo that runs itself and an exhibit that resets itself, so that the app can be seen working without setup.
+**User Story:** As a judge or a museum visitor, I want a demo that runs itself and an exhibit that resets itself, so that the app can be seen working without setup.
+
+#### Acceptance Criteria
 
 1. WHEN Judge Mode starts, THE SYSTEM SHALL play the app's scripted steps through the real engine and hit testing: move a synthetic mouse to each target (an object's projected centre or a world point), hold it, then emit `start`, one `interim` per word every 140 ms and a `final`, with a caption per step.
 2. WHEN the user presses Esc during Judge Mode, THE SYSTEM SHALL stop the script, hide the caption and, once the current wait ends, restore the previous input mode (as it also does when the script finishes).
@@ -74,7 +86,9 @@ file. The skeleton supplies everything else: the React shell, the runtime that w
 
 ### Requirement 6: Scaffolder and size budget
 
-**User story:** As a developer, I want to start a new app in one command and to keep apps small, so that the skeleton stays the place where shared behaviour lives.
+**User Story:** As a developer, I want to start a new app in one command and to keep apps small, so that the skeleton stays the place where shared behaviour lives.
+
+#### Acceptance Criteria
 
 1. WHEN a developer runs `create-hocus-app`, THE SYSTEM SHALL create a `defineApp` file, a starter 3D scene and a passing test.
 2. THE SYSTEM SHALL count the non-blank, non-comment lines of each app's `src/app.ts` and SHALL fail when `apps/room-designer` or `apps/planet-explorer` exceed 300 lines or `examples/kitchen-board` exceeds 150 lines.

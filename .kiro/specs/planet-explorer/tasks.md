@@ -1,4 +1,10 @@
-# Implementation plan: planet-explorer
+# Implementation Plan: planet-explorer
+
+## Overview
+
+Tasks for the planet-explorer spec. Checkbox state reflects the current code; each task cites the requirements it covers. Tasks marked with `*` are optional test tasks.
+
+## Tasks
 
 - [x] 1. Data
   - `src/data/solar-system.json` with NASA NSSDCA source, URLs, retrieval date 2026-11-22, 10 bodies, 8 quiz questions
@@ -43,3 +49,70 @@
     - _Requirements: 1.2_
   - [x]* 5.5 Tamil replay (only English and Hindi replays exist)
     - _Requirements: 6.1_
+
+## Task Dependency Graph
+
+Tasks build on each other in numeric order, so each wave holds one top-level task. Sub-tasks of a task run in its wave.
+
+```mermaid
+flowchart LR
+  T1
+  T1 --> T2
+  T2 --> T3
+  T3 --> T4
+  T4 --> T5
+```
+
+```json
+{
+  "waves": [
+    {
+      "id": 0,
+      "tasks": [
+        "1"
+      ]
+    },
+    {
+      "id": 1,
+      "tasks": [
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.4",
+        "2.5",
+        "2.6"
+      ]
+    },
+    {
+      "id": 2,
+      "tasks": [
+        "3.1",
+        "3.2",
+        "3.3"
+      ]
+    },
+    {
+      "id": 3,
+      "tasks": [
+        "4.1",
+        "4.2"
+      ]
+    },
+    {
+      "id": 4,
+      "tasks": [
+        "5.1",
+        "5.2",
+        "5.3",
+        "5.4",
+        "5.5"
+      ]
+    }
+  ]
+}
+```
+
+## Notes
+
+- Requirement ids refer to `requirements.md` in this folder and are cited by test titles; do not renumber them.
+- Do not mark a task done until its code and tests exist.

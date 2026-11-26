@@ -1,6 +1,6 @@
 import { FaceLandmarker, FilesetResolver, GestureRecognizer, type NormalizedLandmark } from '@mediapipe/tasks-vision';
 import type { TrackerFrame } from '@hocus/input';
-import { aperture, classifyPose, pointerAnchor } from './pose.ts';
+import { aperture, classifyPose, detectHeadGesture, pointerAnchor, type NoseSample } from './pose.ts';
 
 export interface VisionPaths {
   /** Folder with vision_wasm_internal.{js,wasm} (self-hosted). */
@@ -39,6 +39,10 @@ export class VisionTracker {
   private statusCbs = new Set<(s: VisionStatus, detail?: string) => void>();
   onHand: (f: HandFrame | null) => void = () => {};
   onHead: (f: TrackerFrame | null) => void = () => {};
+  /** A nod means confirm, a shake means cancel. */
+  onHeadGesture: (g: 'confirm' | 'cancel') => void = () => {};
+  private nosePath: NoseSample[] = [];
+  private lastHeadGesture = 0;
   fps = 0;
   private frames = 0;
   private fpsT = 0;
@@ -157,8 +161,22 @@ export class VisionTracker {
     if (this.face && this.wantFace) {
       const r = this.face.detectForVideo(this.video, now);
       const nose = r.faceLandmarks[0]?.[1];
-      if (nose) this.onHead({ nx: nose.x, ny: nose.y, conf: 0.9, pose: 'point' });
-      else this.onHead(null);
+      if (nose) {
+        this.onHead({ nx: nose.x, ny: nose.y, conf: 0.9, pose: 'point' });
+        this.nosePath.push({ t: now, x: nose.x, y: nose.y });
+        if (this.nosePath.length > 60) this.nosePath.shift();
+        if (now - this.lastHeadGesture > 1800) {
+          const g = detectHeadGesture(this.nosePath);
+          if (g) {
+            this.lastHeadGesture = now;
+            this.nosePath = [];
+            this.onHeadGesture(g === 'nod' ? 'confirm' : 'cancel');
+          }
+        }
+      } else {
+        this.onHead(null);
+        this.nosePath = [];
+      }
     }
   };
 }

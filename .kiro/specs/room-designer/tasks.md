@@ -1,4 +1,10 @@
-# Implementation plan: room-designer
+# Implementation Plan: room-designer
+
+## Overview
+
+Tasks for the room-designer spec. Checkbox state reflects the current code; each task cites the requirements it covers. Tasks marked with `*` are optional test tasks.
+
+## Tasks
 
 - [x] 1. Room model (`apps/room-designer/src/app.ts`)
   - [x] 1.1 `Item`, `Room`, `CATALOG` (14 types), `TYPES`
@@ -49,3 +55,78 @@
     - _Requirements: 3.4_
   - [x]* 6.5 E2E + axe run of the built app with mouse and typed commands (`tests/e2e/`, not written)
     - _Requirements: 2.4, 3.1_
+
+## Task Dependency Graph
+
+Tasks build on each other in numeric order, so each wave holds one top-level task. Sub-tasks of a task run in its wave.
+
+```mermaid
+flowchart LR
+  T1
+  T1 --> T2
+  T2 --> T3
+  T3 --> T4
+  T4 --> T5
+  T5 --> T6
+```
+
+```json
+{
+  "waves": [
+    {
+      "id": 0,
+      "tasks": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4"
+      ]
+    },
+    {
+      "id": 1,
+      "tasks": [
+        "2.1",
+        "2.2",
+        "2.3"
+      ]
+    },
+    {
+      "id": 2,
+      "tasks": [
+        "3"
+      ]
+    },
+    {
+      "id": 3,
+      "tasks": [
+        "4.1",
+        "4.2",
+        "4.3"
+      ]
+    },
+    {
+      "id": 4,
+      "tasks": [
+        "5.1",
+        "5.2",
+        "5.3"
+      ]
+    },
+    {
+      "id": 5,
+      "tasks": [
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5"
+      ]
+    }
+  ]
+}
+```
+
+## Notes
+
+- Requirement ids refer to `requirements.md` in this folder and are cited by test titles; do not renumber them.
+- Do not mark a task done until its code and tests exist.

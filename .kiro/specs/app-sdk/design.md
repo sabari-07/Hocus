@@ -1,4 +1,4 @@
-# Design: app-sdk
+# Design Document
 
 ## Overview
 
@@ -23,8 +23,11 @@ flowchart TB
   RT -->|sync / onExecuted| SC
 ```
 
-## Components
+## Architecture
 
+An app is three files (`app.ts`, `scene.ts`, `main.tsx`); the shell and runtime in `packages/ui` connect the engine to React and three.js. See the diagram in Overview.
+
+## Components and Interfaces
 | File | Responsibility | Requirements |
 |---|---|---|
 | `packages/core/src/app.ts` | `SlotKind`, `ActionSpec`, `AppDefinition`, `AppVocabulary`, `EntitySpec`, `defineApp`, `bindingToArg` | 1 |
@@ -94,20 +97,29 @@ Kiosk mode checks `URLSearchParams.has('kiosk')` every 5 s. After 120 s without 
 | `apps/planet-explorer` | 300 | 208 |
 | `examples/kitchen-board` | 150 | 82 |
 
-## Correctness properties
+## Data Models
 
-| Id | Property | Requirements |
-|---|---|---|
-| P13 | Voice + pointing, click + typed command, and the `command` path give the same document | 3.2 |
+The app contract is `AppDefinition` with `ActionSpec`, `EntitySpec`, `AppVocabulary`, `ActionArgs` and `ActionContext` in `packages/core/src/app.ts`. Scenes implement the `SceneController` contract described below.
+
+## Correctness Properties
+
+### Property 1: P13 Voice + pointing, click + typed command, and the `command` path give the same document
+
+**Validates: Requirements 3.2**
+
 
 `tests/unit/apps.test.ts` checks for the three real apps that lexicon lint has no errors, that every Spellbook
 example parses to its own action in every language, and that selectable ids and labels are unique.
 
-## Error handling
+## Error Handling
 
 - `defineApp` throws at load time for reserved names and undeclared optional slots.
 - Settings that fail to load or save (private mode) fall back to `DEFAULT_SETTINGS`.
 - Camera and speech denials become toasts; mouse and typing keep working.
+
+## Testing Strategy
+
+Property tests are listed under Correctness Properties. `npm run check` runs the determinism lint, the app-size budget, the typecheck and all tests (unit, properties, replays).
 
 ## Known gaps
 

@@ -1,4 +1,10 @@
-# Implementation plan: speech-input
+# Implementation Plan: speech-input
+
+## Overview
+
+Tasks for the speech-input spec. Checkbox state reflects the current code; each task cites the requirements it covers. Tasks marked with `*` are optional test tasks.
+
+## Tasks
 
 - [x] 1. Recognizer (`packages/speech/src/recognizer.ts`)
   - [x] 1.1 Push-to-talk `start` / `stop` / `abort`; `start`, `interim`, `final` (with `alts`, `vad`), `end` events
@@ -49,3 +55,88 @@
     - _Requirements: 7.2, 7.3, 7.5_
   - [ ]* 8.5 Unit test for `VoiceActivity` segmenting with a fake analyser
     - _Requirements: 3.2, 3.3_
+
+## Task Dependency Graph
+
+Tasks build on each other in numeric order, so each wave holds one top-level task. Sub-tasks of a task run in its wave.
+
+```mermaid
+flowchart LR
+  T1
+  T1 --> T2
+  T2 --> T3
+  T3 --> T4
+  T4 --> T5
+  T5 --> T6
+  T6 --> T7
+  T7 --> T8
+```
+
+```json
+{
+  "waves": [
+    {
+      "id": 0,
+      "tasks": [
+        "1.1",
+        "1.2",
+        "1.3"
+      ]
+    },
+    {
+      "id": 1,
+      "tasks": [
+        "2"
+      ]
+    },
+    {
+      "id": 2,
+      "tasks": [
+        "3.1",
+        "3.2"
+      ]
+    },
+    {
+      "id": 3,
+      "tasks": [
+        "4"
+      ]
+    },
+    {
+      "id": 4,
+      "tasks": [
+        "5"
+      ]
+    },
+    {
+      "id": 5,
+      "tasks": [
+        "6.1",
+        "6.2"
+      ]
+    },
+    {
+      "id": 6,
+      "tasks": [
+        "7.1",
+        "7.2"
+      ]
+    },
+    {
+      "id": 7,
+      "tasks": [
+        "8.1",
+        "8.2",
+        "8.3",
+        "8.4",
+        "8.5"
+      ]
+    }
+  ]
+}
+```
+
+## Notes
+
+- Requirement ids refer to `requirements.md` in this folder and are cited by test titles; do not renumber them.
+- Do not mark a task done until its code and tests exist.

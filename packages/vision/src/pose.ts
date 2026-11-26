@@ -39,6 +39,55 @@ export function aperture(lm: readonly Lm[]): number | undefined {
   return Math.min(1, Math.max(0, (spread - 0.15) / 1.35));
 }
 
+export interface NoseSample {
+  t: number;
+  /** Camera-normalized, 0..1. */
+  x: number;
+  y: number;
+}
+
+/**
+ * Detect a head nod (up-down) or shake (left-right) in the recent nose path (hands-free confirm / cancel).
+ * A gesture is at least three alternating swings of >= `minSwing` on one axis inside `windowMs`, while the other
+ * axis moves less than `crossRatio` of that. A slow drift (head pointing) has no reversals, so it never fires.
+ * Pure: the caller supplies timestamps.
+ */
+export function detectHeadGesture(
+  path: readonly NoseSample[],
+  opts: { windowMs?: number; minSwing?: number; crossRatio?: number; minSwings?: number } = {},
+): 'nod' | 'shake' | null {
+  const { windowMs = 1300, minSwing = 0.016, crossRatio = 0.65, minSwings = 3 } = opts;
+  const last = path[path.length - 1];
+  if (!last) return null;
+  const recent = path.filter((p) => last.t - p.t <= windowMs);
+  if (recent.length < 8) return null;
+  const swings = (axis: 'x' | 'y') => {
+    let dir = 0;
+    let anchor = recent[0]![axis];
+    let count = 0;
+    let lo = anchor;
+    let hi = anchor;
+    for (const p of recent) {
+      const v = p[axis];
+      lo = Math.min(lo, v);
+      hi = Math.max(hi, v);
+      const d = v - anchor;
+      if (Math.abs(d) >= minSwing) {
+        const nd = Math.sign(d);
+        if (nd !== dir) count += 1;
+        dir = nd;
+        anchor = v;
+      }
+    }
+    return { count, span: hi - lo };
+  };
+  const x = swings('x');
+  const y = swings('y');
+  if (y.count >= minSwings && x.span < y.span * crossRatio) return 'nod';
+  if (x.count >= minSwings && y.span < x.span * crossRatio) return 'shake';
+  return null;
+}
+
 /** Pointer anchor: the index fingertip. */
 export function pointerAnchor(lm: readonly Lm[]): { x: number; y: number } | null {
   const tip = lm[8];

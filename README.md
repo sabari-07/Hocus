@@ -17,6 +17,14 @@ Built with Kiro for **Kiroween 2026 · Skeleton Crew**: one lean skeleton, three
 
 Line counts come from `npm run app-size` (`docs/app-size.md`).
 
+![Hocus landing: the idea in one picture, three apps, camera or mouse](docs/img/landing.png)
+
+| Judge Mode drives the real engine; the thread shows what "this" bound to | The X-ray shows why |
+|---|---|
+| ![Judge Mode in the Haunted Room](docs/img/room-judge-mode.png) | ![X-ray decision viewer](docs/img/room-xray.png) |
+
+![Planet Explorer in Hindi: यह क्या है → Jupiter](docs/img/planets-hindi.png)
+
 ## Try it in 30 seconds
 
 ```bash
@@ -56,6 +64,14 @@ hit test at capture   becomes a frame      from pointer evidence at     (undoabl
 
 Details: [`docs/architecture.md`](docs/architecture.md) and the fusion spec in
 [`.kiro/specs/fusion-engine/`](.kiro/specs/fusion-engine/).
+
+## What you see while you use it
+
+- **Spell threads:** a glowing curve runs from each spoken word to the object or spot it bound to.
+- **Ghost preview:** while you are still speaking or typing, the dock shows the command Hocus *would* run (dashed chips, italic sentence). It uses the same parser and resolver as the real command and changes nothing (property P21).
+- **Evidence glow:** the object "that" would mean right now glows in the scene, brighter with more evidence.
+- **Confidence meter** under every word chip; **Ask** mode numbers the candidates in the scene.
+- **Head gestures:** nod to confirm, shake to cancel (Settings → "Nod to confirm, shake to cancel").
 
 ## What an app writes
 
@@ -98,11 +114,11 @@ docs/        architecture · kiro-journal · benchmark · app-size · write-up �
 |---|---|---|
 | Determinism lint (no clock/random/DOM in core) | `npm run lint` | passing |
 | Typecheck (strict) | `npm run typecheck` | passing |
-| Unit tests | `npm run test:unit` | 107 passing |
-| Property tests P01–P20 (100 cases each) | `npm run test:props` | 24 passing |
+| Unit tests | `npm run test:unit` | 113 passing |
+| Property tests P01–P20 (100 cases each) | `npm run test:props` | 27 passing (22 properties) |
 | Sabotage mutants (each killed by its property) | `node scripts/sanity-mutants.mjs` | 7 of 7 killed |
 | Replay corpus | `npm run test:replays` | 9 passing (8 synthetic sessions, incl. a repair, Hindi and Tamil) |
-| E2E + axe (no serious/critical issues) | `npm run test:e2e` | 9 passing |
+| E2E + axe (no serious/critical issues) | `npm run test:e2e` | 11 passing |
 | Mutation testing (fusion math) | `npm run test:mutation` | 59.7% overall; timing 91%, geometry 82%, evidence 77%, resolver 46% (`docs/mutation.md`) |
 | Benchmark vs baselines (simulated users) | `npm run bench` | see `docs/benchmark.md` |
 
@@ -130,7 +146,8 @@ Chrome is a cloud service unless on-device recognition is available (Settings sh
 - Speech word timing is estimated, not measured per word. Hocus asks when unsure instead of guessing.
 - Hindi and Tamil word lists were drafted with AI help and **still need native-speaker review**.
 - All replay files are synthetic until real sessions are recorded. Benchmark numbers are from simulated users.
-- Pointing at a 3D object depends on lighting and camera quality. The mouse, touch and keyboard paths always work.
+- Hand tracking has been exercised with synthetic samples and a real mouse over the 3D scene, not yet with many real hands. Pointing at a 3D object depends on lighting and camera quality. The mouse, touch and keyboard paths always work.
+- A weak GPU may struggle with bloom and outlines; if the WebGL context is lost Hocus says so and recovers.
 
 ## Licence
 

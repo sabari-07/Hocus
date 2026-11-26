@@ -1,4 +1,10 @@
-# Implementation plan: lexicon-parser
+# Implementation Plan: lexicon-parser
+
+## Overview
+
+Tasks for the lexicon-parser spec. Checkbox state reflects the current code; each task cites the requirements it covers. Tasks marked with `*` are optional test tasks.
+
+## Tasks
 
 - [x] 1. Language packs
   - [x] 1.1 `LexiconPack` type in `lexicon/types.ts` with implicit triggers documented
@@ -65,3 +71,106 @@
     - _Requirements: 7.1, 7.2_
   - [x]* 10.6 Unit tests for lint warnings and errors on a deliberately broken fixture app
     - _Requirements: 7.1, 7.2, 7.3, 7.4_
+
+## Task Dependency Graph
+
+Tasks build on each other in numeric order, so each wave holds one top-level task. Sub-tasks of a task run in its wave.
+
+```mermaid
+flowchart LR
+  T1
+  T1 --> T2
+  T2 --> T3
+  T3 --> T4
+  T4 --> T5
+  T5 --> T6
+  T6 --> T7
+  T7 --> T8
+  T8 --> T9
+  T9 --> T10
+```
+
+```json
+{
+  "waves": [
+    {
+      "id": 0,
+      "tasks": [
+        "1.1",
+        "1.2",
+        "1.3"
+      ]
+    },
+    {
+      "id": 1,
+      "tasks": [
+        "2.1",
+        "2.2",
+        "2.3"
+      ]
+    },
+    {
+      "id": 2,
+      "tasks": [
+        "3"
+      ]
+    },
+    {
+      "id": 3,
+      "tasks": [
+        "4.1",
+        "4.2"
+      ]
+    },
+    {
+      "id": 4,
+      "tasks": [
+        "5"
+      ]
+    },
+    {
+      "id": 5,
+      "tasks": [
+        "6.1",
+        "6.2",
+        "6.3"
+      ]
+    },
+    {
+      "id": 6,
+      "tasks": [
+        "7"
+      ]
+    },
+    {
+      "id": 7,
+      "tasks": [
+        "8"
+      ]
+    },
+    {
+      "id": 8,
+      "tasks": [
+        "9.1",
+        "9.2"
+      ]
+    },
+    {
+      "id": 9,
+      "tasks": [
+        "10.1",
+        "10.2",
+        "10.3",
+        "10.4",
+        "10.5",
+        "10.6"
+      ]
+    }
+  ]
+}
+```
+
+## Notes
+
+- Requirement ids refer to `requirements.md` in this folder and are cited by test titles; do not renumber them.
+- Do not mark a task done until its code and tests exist.

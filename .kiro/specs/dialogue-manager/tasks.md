@@ -1,4 +1,10 @@
-# Implementation plan: dialogue-manager
+# Implementation Plan: dialogue-manager
+
+## Overview
+
+Tasks for the dialogue-manager spec. Checkbox state reflects the current code; each task cites the requirements it covers. Tasks marked with `*` are optional test tasks.
+
+## Tasks
 
 - [x] 1. Phase model
   - `Phase`, `Pending`, `Snapshot`, `LastAction`, `CoreState` types; `listening` on speech start
@@ -61,3 +67,99 @@
     - _Requirements: 5.3, 5.4, 7.4_
   - [x]* 9.5 E2E test of the keyboard-only dialogue (Enter, Esc, 1-9, Ctrl+Z) in a built app (`tests/e2e/`, not written)
     - _Requirements: 3.1, 3.2, 3.3, 4.4_
+
+## Task Dependency Graph
+
+Tasks build on each other in numeric order, so each wave holds one top-level task. Sub-tasks of a task run in its wave.
+
+```mermaid
+flowchart LR
+  T1
+  T1 --> T2
+  T2 --> T3
+  T3 --> T4
+  T4 --> T5
+  T5 --> T6
+  T6 --> T7
+  T7 --> T8
+  T8 --> T9
+```
+
+```json
+{
+  "waves": [
+    {
+      "id": 0,
+      "tasks": [
+        "1"
+      ]
+    },
+    {
+      "id": 1,
+      "tasks": [
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.4"
+      ]
+    },
+    {
+      "id": 2,
+      "tasks": [
+        "3.1",
+        "3.2"
+      ]
+    },
+    {
+      "id": 3,
+      "tasks": [
+        "4.1",
+        "4.2"
+      ]
+    },
+    {
+      "id": 4,
+      "tasks": [
+        "5.1",
+        "5.2",
+        "5.3"
+      ]
+    },
+    {
+      "id": 5,
+      "tasks": [
+        "6"
+      ]
+    },
+    {
+      "id": 6,
+      "tasks": [
+        "7"
+      ]
+    },
+    {
+      "id": 7,
+      "tasks": [
+        "8.1",
+        "8.2",
+        "8.3"
+      ]
+    },
+    {
+      "id": 8,
+      "tasks": [
+        "9.1",
+        "9.2",
+        "9.3",
+        "9.4",
+        "9.5"
+      ]
+    }
+  ]
+}
+```
+
+## Notes
+
+- Requirement ids refer to `requirements.md` in this folder and are cited by test titles; do not renumber them.
+- Do not mark a task done until its code and tests exist.

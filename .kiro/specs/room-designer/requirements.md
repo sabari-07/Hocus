@@ -1,4 +1,6 @@
-# Requirements: room-designer
+# Requirements Document
+
+Spec: room-designer
 
 ## Introduction
 
@@ -20,7 +22,9 @@ a Judge Mode script. Parsing, binding, preview, undo, help and accessibility com
 
 ### Requirement 1: Room model
 
-**User story:** As a user, I want a room full of named props I can point at, so that "that" always has something to mean.
+**User Story:** As a user, I want a room full of named props I can point at, so that "that" always has something to mean.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL hold the room as a list of items, a `lightsOn` flag and a per-type counter used for ids and numbers.
 2. THE SYSTEM SHALL offer 14 item types: pumpkin, ghost, bat, candle, cobweb, coffin, lantern, dead tree, skeleton, black cat, cauldron, gravestone, spider and moon window.
@@ -30,7 +34,9 @@ a Judge Mode script. Parsing, binding, preview, undo, help and accessibility com
 
 ### Requirement 2: Adding and moving
 
-**User story:** As a user, I want to put new props where I point and move existing ones the same way, so that I can arrange the room without dragging.
+**User Story:** As a user, I want to put new props where I point and move existing ones the same way, so that I can arrange the room without dragging.
+
+#### Acceptance Criteria
 
 1. WHEN the user says "put a pumpkin there" (or "add a bat here", "वहाँ एक कद्दू रखो", "அங்கே ஒரு பூசணி வை") while pointing at the floor or the back wall, THE SYSTEM SHALL add a new item of that type at the pointed spot, placed by its mount.
 2. WHEN the user says "put it there" or "move that there", THE SYSTEM SHALL move the item to the pointed spot; floor items SHALL stay on the floor.
@@ -40,7 +46,9 @@ a Judge Mode script. Parsing, binding, preview, undo, help and accessibility com
 
 ### Requirement 3: Editing props
 
-**User story:** As a user, I want to resize, rotate, recolour and copy props by voice, so that decorating is quick.
+**User Story:** As a user, I want to resize, rotate, recolour and copy props by voice, so that decorating is quick.
+
+#### Acceptance Criteria
 
 1. WHEN the user says "make that bigger" or "make this smaller", THE SYSTEM SHALL multiply the item's scale by the factor (default 1.25), clamped to [0.25, 4].
 2. WHEN the user says "make it this big" while showing a size with thumb and finger, THE SYSTEM SHALL set the scale to `0.4 + 2.6 × aperture`, clamped to [0.25, 4].
@@ -51,7 +59,9 @@ a Judge Mode script. Parsing, binding, preview, undo, help and accessibility com
 
 ### Requirement 4: Deleting, lights, questions and reset
 
-**User story:** As a user, I want to clear things, change the mood and start over safely, so that mistakes are cheap.
+**User Story:** As a user, I want to clear things, change the mood and start over safely, so that mistakes are cheap.
+
+#### Acceptance Criteria
 
 1. WHEN the user says "delete that", "delete these" or "delete every bat", THE SYSTEM SHALL remove the items; removing more than one SHALL need confirmation (destructive action).
 2. WHEN the user says "lights off" or "lights on", THE SYSTEM SHALL switch the room lights; with the lights off the room SHALL dim and props with glow materials (for example candles, pumpkins and lanterns) SHALL glow brighter.
@@ -60,7 +70,9 @@ a Judge Mode script. Parsing, binding, preview, undo, help and accessibility com
 
 ### Requirement 5: Three languages
 
-**User story:** As a Hindi or Tamil speaker, I want the same commands in my language, so that I can decorate without English.
+**User Story:** As a Hindi or Tamil speaker, I want the same commands in my language, so that I can decorate without English.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL give every action trigger phrases and Spellbook examples in `en`, `hi` and `ta`, and every item type nouns in all three languages, with no lexicon lint errors.
 2. WHEN any Spellbook example is parsed in its language, THE SYSTEM SHALL get that example's own action.
@@ -68,7 +80,9 @@ a Judge Mode script. Parsing, binding, preview, undo, help and accessibility com
 
 ### Requirement 6: The 3D room
 
-**User story:** As a user, I want a room that looks alive and reacts to my commands, so that the result is worth sharing.
+**User Story:** As a user, I want a room that looks alive and reacts to my commands, so that the result is worth sharing.
+
+#### Acceptance Criteria
 
 1. THE scene SHALL build a floor, a back wall and side walls, register the floor and the back wall as placement surfaces, and register every item with the stage for pointing.
 2. WHEN the document changes, THE scene SHALL add, update and remove item models, ease them to their new position, scale and rotation, and apply or clear tints.

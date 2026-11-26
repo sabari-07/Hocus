@@ -1,4 +1,6 @@
-# Requirements: kitchen-board
+# Requirements Document
+
+Spec: kitchen-board
 
 ## Introduction
 
@@ -16,7 +18,9 @@ parsing, binding, preview, undo, help, accessibility) comes from the skeleton.
 
 ### Requirement 1: Recipe cards
 
-**User story:** As a cook, I want each ingredient and step on its own card, so that I can point at the one I mean.
+**User Story:** As a cook, I want each ingredient and step on its own card, so that I can point at the one I mean.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL start with 4 ingredient cards (flour, pumpkin purée, brown sugar, eggs) and 4 step cards, with step 1 current.
 2. THE SYSTEM SHALL expose each card as a selectable labelled with the ingredient name or "Step <n>", with the capability `ingredient` or `step`.
@@ -24,7 +28,9 @@ parsing, binding, preview, undo, help, accessibility) comes from the skeleton.
 
 ### Requirement 2: Hands-free commands
 
-**User story:** As a cook with flour on my hands, I want to scale amounts and track steps by pointing and speaking, so that I never touch the screen.
+**User Story:** As a cook with flour on my hands, I want to scale amounts and track steps by pointing and speaking, so that I never touch the screen.
+
+#### Acceptance Criteria
 
 1. WHEN the cook says "double this" or "half that" at an ingredient, THE SYSTEM SHALL multiply its quantity by 2 or 0.5 and read the new amount; step cards SHALL NOT be candidates.
 2. WHEN the cook says "start a timer for that" at a step, THE SYSTEM SHALL mark that step as having a timer and say its minutes; ingredient cards SHALL NOT be candidates.
@@ -35,7 +41,9 @@ parsing, binding, preview, undo, help, accessibility) comes from the skeleton.
 
 ### Requirement 3: Reuse proof
 
-**User story:** As a developer judging the skeleton, I want a third app that is tiny, so that I can see how much the skeleton does.
+**User Story:** As a developer judging the skeleton, I want a third app that is tiny, so that I can see how much the skeleton does.
+
+#### Acceptance Criteria
 
 1. THE app folder SHALL contain only `src/app.ts`, `src/scene.ts`, `src/main.tsx`, config and public assets.
 2. THE behaviour file `src/app.ts` SHALL stay within the 150-line budget of `scripts/check-app-size.mjs`.

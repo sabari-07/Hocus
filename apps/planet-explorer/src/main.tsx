@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { HocusApp, SceneList, appLinks, type JudgeStep } from '@hocus/ui';
-import { BODIES, QUIZ, SOURCE, body, compareBodies, planetApp } from './app.ts';
+import { BODIES, QUIZ, SOURCE, body, compareBodies, planetApp, type Body } from './app.ts';
 import { createPlanetScene } from './scene.ts';
 
 const JUDGE: JudgeStep[] = [
@@ -14,22 +14,102 @@ const JUDGE: JudgeStep[] = [
   { point: 'venus', say: 'that one', caption: 'Point and say “that one”. Your turn!', wait: 2600 },
 ];
 
-const fmt = (n: number | null) => (n == null ? '—' : n.toLocaleString('en-US', { maximumFractionDigits: 1 }));
+const fmt = (n: number | null, d = 1) => (n == null ? '—' : n.toLocaleString('en-US', { maximumFractionDigits: d }));
+const MAX_D = Math.max(...BODIES.filter((b) => b.kind === 'planet').map((b) => b.diameterKm));
+const MAX_AU = Math.max(...BODIES.map((b) => b.distanceMkm));
+const share = (v: number, max: number) => `${Math.max(2, Math.min(100, (v / max) * 100)).toFixed(1)}%`;
+
+function Dot({ b }: { b: Body }) {
+  return <span aria-hidden="true" style={{ display: 'inline-block', width: 12, height: 12, borderRadius: '50%', background: b.color, boxShadow: `0 0 10px ${b.color}`, marginRight: 8 }} />;
+}
+
+function Facts({ b }: { b: Body }) {
+  return (
+    <section aria-label={`About ${b.name}`}>
+      <h2>
+        <Dot b={b} />
+        {b.name}
+      </h2>
+      <div className="hx-stat">
+        <span className="hx-stat__value">{fmt(b.diameterKm, 0)} km</span>
+        <span className="hx-stat__label">Diameter</span>
+      </div>
+      <div className="hx-bar2" aria-hidden="true">
+        <i style={{ width: share(b.diameterKm, b.kind === 'star' ? b.diameterKm : MAX_D) }} />
+      </div>
+      <div className="hx-stat">
+        <span className="hx-stat__value">{b.kind === 'moon' ? `${fmt(b.distanceMkm * 1000, 0)} k km` : `${fmt(b.distanceMkm)} M km`}</span>
+        <span className="hx-stat__label">{b.kind === 'moon' ? 'From Earth' : 'From the Sun'}</span>
+      </div>
+      <div className="hx-bar2" aria-hidden="true">
+        <i style={{ width: share(b.distanceMkm, MAX_AU) }} />
+      </div>
+      <dl className="hx-facts">
+        <div><dt>Day</dt><dd>{fmt(b.dayHours)} h</dd></div>
+        <div><dt>Year</dt><dd>{fmt(b.yearDays, 0)} d</dd></div>
+        <div><dt>Moons</dt><dd>{fmt(b.moons, 0)}</dd></div>
+        <div><dt>Mean temp.</dt><dd>{fmt(b.tempC, 0)} °C</dd></div>
+      </dl>
+      <p className="hx-small">{b.fact}</p>
+    </section>
+  );
+}
+
+function Versus({ a, b }: { a: Body; b: Body }) {
+  const rows: Array<[string, number | null, number | null, string]> = [
+    ['Diameter (km)', a.diameterKm, b.diameterKm, '0'],
+    ['From Sun (M km)', a.distanceMkm, b.distanceMkm, '1'],
+    ['Day (hours)', a.dayHours, b.dayHours, '1'],
+    ['Year (days)', a.yearDays, b.yearDays, '0'],
+    ['Moons', a.moons, b.moons, '0'],
+  ];
+  return (
+    <section aria-label="Comparison">
+      <h2>
+        <Dot b={a} />
+        {a.name} vs <span style={{ marginLeft: 6 }} />
+        <Dot b={b} />
+        {b.name}
+      </h2>
+      {rows.map(([label, x, y, d]) => {
+        const max = Math.max(x ?? 0, y ?? 0, 1e-9);
+        return (
+          <div key={label} className="hx-vs">
+            <span className="hx-stat__label">{label}</span>
+            <div className="hx-vs__row">
+              <span className="hx-mono hx-small">{fmt(x, Number(d))}</span>
+              <div className="hx-bar2"><i style={{ width: share(x ?? 0, max), background: a.color }} /></div>
+            </div>
+            <div className="hx-vs__row">
+              <span className="hx-mono hx-small">{fmt(y, Number(d))}</span>
+              <div className="hx-bar2"><i style={{ width: share(y ?? 0, max), background: b.color }} /></div>
+            </div>
+          </div>
+        );
+      })}
+      <p className="hx-small" aria-live="polite">{compareBodies(a.id, b.id)}</p>
+    </section>
+  );
+}
 
 createRoot(document.getElementById('root')!).render(
   <HocusApp
     app={planetApp}
+    theme="observatory"
+    rightLabel="Observatory"
     stage={{ label: 'A 3D solar system: the Sun, eight planets and the Moon, which you can point at', cameraPosition: [2.5, 22, 26], lookAt: [2.5, 0, 1.7], fov: 45, bloom: { strength: 0.6, radius: 0.5, threshold: 0.85 }, margin: 22 }}
     createScene={createPlanetScene}
     judge={JUDGE}
     links={appLinks()}
     topExtra={(rt) => (
       <>
-        <button className="hx-btn hx-btn--ghost" aria-pressed={rt.state.doc.app.trueScale} onClick={() => rt.command('scaleMode', { on: !rt.state.doc.app.trueScale })}>
-          ⚖ True scale
+        <button className="hx-tool" aria-pressed={rt.state.doc.app.trueScale} onClick={() => rt.command('scaleMode', { on: !rt.state.doc.app.trueScale })}>
+          <span aria-hidden="true">⚖</span>
+          <span className="hx-tool__label">True scale</span>
         </button>
-        <button className="hx-btn hx-btn--ghost" onClick={() => rt.command('quiz', { on: !rt.state.doc.app.quiz })}>
-          ❓ Quiz
+        <button className="hx-tool" aria-pressed={!!rt.state.doc.app.quiz} onClick={() => rt.command('quiz', { on: !rt.state.doc.app.quiz })}>
+          <span aria-hidden="true">❓</span>
+          <span className="hx-tool__label">Quiz</span>
         </button>
       </>
     )}
@@ -49,59 +129,24 @@ createRoot(document.getElementById('root')!).render(
             </section>
           )}
           {cmp && cmp[0] && cmp[1] ? (
-            <section aria-label="Comparison">
-              <h2>
-                {cmp[0].name} vs {cmp[1].name}
-              </h2>
-              <table>
-                <thead>
-                  <tr>
-                    <th scope="col" />
-                    <th scope="col">{cmp[0].name}</th>
-                    <th scope="col">{cmp[1].name}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><th scope="row">Diameter (km)</th><td>{fmt(cmp[0].diameterKm)}</td><td>{fmt(cmp[1].diameterKm)}</td></tr>
-                  <tr><th scope="row">From Sun (M km)</th><td>{fmt(cmp[0].distanceMkm)}</td><td>{fmt(cmp[1].distanceMkm)}</td></tr>
-                  <tr><th scope="row">Day (hours)</th><td>{fmt(cmp[0].dayHours)}</td><td>{fmt(cmp[1].dayHours)}</td></tr>
-                  <tr><th scope="row">Year (days)</th><td>{fmt(cmp[0].yearDays)}</td><td>{fmt(cmp[1].yearDays)}</td></tr>
-                  <tr><th scope="row">Moons</th><td>{fmt(cmp[0].moons)}</td><td>{fmt(cmp[1].moons)}</td></tr>
-                </tbody>
-              </table>
-              <p className="hx-small">{compareBodies(cmp[0].id, cmp[1].id)}</p>
-            </section>
+            <Versus a={cmp[0]} b={cmp[1]} />
           ) : info ? (
-            <section aria-label={`About ${info.name}`}>
-              <h2>{info.name}</h2>
-              <table>
-                <tbody>
-                  <tr><th scope="row">Diameter</th><td>{fmt(info.diameterKm)} km</td></tr>
-                  <tr><th scope="row">{info.kind === 'moon' ? 'From Earth' : 'From Sun'}</th><td>{info.kind === 'moon' ? `${fmt(info.distanceMkm * 1000)} thousand km` : `${fmt(info.distanceMkm)} million km`}</td></tr>
-                  <tr><th scope="row">Day</th><td>{fmt(info.dayHours)} h</td></tr>
-                  <tr><th scope="row">Year</th><td>{fmt(info.yearDays)} days</td></tr>
-                  <tr><th scope="row">Moons</th><td>{fmt(info.moons)}</td></tr>
-                  <tr><th scope="row">Mean temp.</th><td>{fmt(info.tempC)} °C</td></tr>
-                </tbody>
-              </table>
-              <p className="hx-small">{info.fact}</p>
-            </section>
+            <Facts b={info} />
           ) : (
             <section>
               <h2>Point &amp; Ask</h2>
-              <p className="hx-small hx-muted">Point at a planet and say “what is that?”, or “compare this with that”.</p>
+              <p className="hx-small hx-muted">Point at a planet and say “what is that?”, or “compare this with that”. Time slows while you hold a planet, so it is easy to catch.</p>
             </section>
           )}
           <SceneList title="Bodies" />
-          <p className="hx-small hx-muted">
-            Data: <a href={SOURCE.urls[0]} style={{ color: 'var(--hx-violet)' }}>{SOURCE.name}</a>, retrieved {SOURCE.retrieved}. Speed ×{sky.speed}.{' '}
-            {BODIES.length} bodies.
-          </p>
           <div className="hx-menu">
             <button className="hx-btn hx-btn--ghost" onClick={() => rt.command('slower', {})}>⏪ Slower</button>
-            <button className="hx-btn hx-btn--ghost" onClick={() => rt.command('faster', {})}>⏩ Faster</button>
+            <button className="hx-btn hx-btn--ghost" onClick={() => rt.command('faster', {})}>⏩ Faster ×{sky.speed}</button>
             <button className="hx-btn hx-btn--ghost" onClick={() => rt.command('reset', {})}>Reset view</button>
           </div>
+          <p className="hx-small hx-muted">
+            Data: <a href={SOURCE.urls[0]} style={{ color: 'var(--hx-violet)' }}>{SOURCE.name}</a>, retrieved {SOURCE.retrieved}.
+          </p>
         </div>
       );
     }}

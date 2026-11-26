@@ -1,4 +1,4 @@
-# Design: kitchen-board
+# Design Document
 
 ## Overview
 
@@ -14,8 +14,11 @@ flowchart LR
   S --> ST[Stage: cards registered, board surface]
 ```
 
-## Components
+## Architecture
 
+Recipe Board is one `defineApp` definition in `examples/kitchen-board/src/app.ts`, a three.js scene in `scene.ts` and a mount in `main.tsx`. See Overview.
+
+## Components and Interfaces
 | File | Responsibility | Requirements |
 |---|---|---|
 | `examples/kitchen-board/src/app.ts` | `Card`, `Kitchen`, `CARDS`, `show`, `kitchenApp` (actions, vocabulary) | 1.1, 1.2, 2 |
@@ -34,7 +37,35 @@ flowchart LR
 
 "double" and "half" are size words in the packs (factors 2 and 0.5), so the same action handles both.
 
-## Checks
+## Data Models
+
+The board state and action reducers are defined in `examples/kitchen-board/src/app.ts`; each card is exposed to the engine as a `Selectable` (`packages/core/src/types.ts`).
+
+## Correctness Properties
+
+### Property 1: Vocabulary is complete and selectables are unique
+
+Lint reports no errors, every example parses to its action in en / hi / ta, and selectable ids and labels are unique (`tests/unit/apps.test.ts`).
+
+**Validates: Requirements 2.6**
+
+### Property 2: "double this" resolves to the pointed ingredient
+
+Replayed from `tests/replays/kitchen-double.replay.json`.
+
+**Validates: Requirements 2.1, 3.3**
+
+### Property 3: The app definition stays small
+
+`src/app.ts` is within 150 lines (82 today), checked by `scripts/check-app-size.mjs`.
+
+**Validates: Requirements 3.2**
+
+## Error Handling
+
+The app adds no error paths of its own. Unknown phrases, missing pointing evidence and ambiguous targets are handled by the engine (see fusion-engine, Error Handling); `requires: step` and `requires: ingredient` make the engine drop cards that lack the capability before scoring.
+
+## Testing Strategy
 
 | Check | Where | Requirements |
 |---|---|---|

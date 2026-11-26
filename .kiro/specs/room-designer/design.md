@@ -1,4 +1,4 @@
-# Design: room-designer
+# Design Document
 
 ## Overview
 
@@ -15,8 +15,11 @@ flowchart LR
   ST -->|hits + place at capture| E
 ```
 
-## Components
+## Architecture
 
+Room Designer is one `defineApp` definition in `apps/room-designer/src/app.ts`, a three.js scene in `scene.ts` and `models.ts`, and a mount in `main.tsx`. All shared behaviour comes from the skeleton packages. See Overview.
+
+## Components and Interfaces
 | File | Responsibility | Requirements |
 |---|---|---|
 | `apps/room-designer/src/app.ts` | `Item`, `Room`, `CATALOG`, `TYPES`, `STARTERS`, `make`, `snap`, `placeFromArg`, `update`, `roomApp` (actions, entities, vocabulary) | 1-5 |
@@ -55,20 +58,48 @@ The only app verb is `lights`; all other verbs come from the skeleton packs.
   light, runs bursts and keeps chips on moving objects.
 - Tints map colour names through `NAMED_COLORS`; a `null` tint restores the base colours.
 
-## Correctness properties
+## Data Models
 
-| Check | Where | Requirements |
-|---|---|---|
-| Lint has no errors; every example parses to its action in en, hi, ta; ids and labels unique | `tests/unit/apps.test.ts` | 5.1-5.3 |
-| "make that bigger" then "put it there" keeps resolving the same way | `tests/replays/room-bigger-put-there.replay.json` | 2.2, 3.1 |
-| Naming, using the name, recolour, undo | `tests/replays/room-name-and-repair.replay.json` | 3.4 |
-| `src/app.ts` within 300 lines (223 today) | `scripts/check-app-size.mjs` | 6.6 |
+The room state and its action reducers are defined in `apps/room-designer/src/app.ts`; each prop is exposed to the engine as a `Selectable` (`packages/core/src/types.ts`).
 
-## Error handling
+## Correctness Properties
+
+### Property 1: Lint has no errors; every example parses to its action in en, hi, ta; ids and labels unique
+
+Where: `tests/unit/apps.test.ts`
+
+**Validates: Requirements 5.1**
+
+Full reference: 5.1-5.3
+
+### Property 2: "make that bigger" then "put it there" keeps resolving the same way
+
+Where: `tests/replays/room-bigger-put-there.replay.json`
+
+**Validates: Requirements 2.2, 3.1**
+
+### Property 3: Naming, using the name, recolour, undo
+
+Where: `tests/replays/room-name-and-repair.replay.json`
+
+**Validates: Requirements 3.4**
+
+### Property 4: `src/app.ts` within 300 lines (223 today)
+
+Where: `scripts/check-app-size.mjs`
+
+**Validates: Requirements 6.6**
+
+
+## Error Handling
 
 - Positions are always clamped and snapped, so a bad place cannot put an item outside the room.
 - A `duplicate` of a missing id returns the room unchanged.
 - Recolouring a non-colourable item is prevented by the capability filter before scoring (fusion-engine 4.5).
+
+## Testing Strategy
+
+Property tests are listed under Correctness Properties. `npm run check` runs the determinism lint, the app-size budget, the typecheck and all tests (unit, properties, replays).
 
 ## Known gaps
 

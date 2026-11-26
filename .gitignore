@@ -56,3 +56,9 @@ test-results/
 .mut-*.json
 .stryker2.log
 
+
+.resp-*.png
+.view-*.png
+.tab-*.png
+.mut-ev.json
+

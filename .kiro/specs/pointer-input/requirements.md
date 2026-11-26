@@ -1,4 +1,6 @@
-# Requirements: pointer-input
+# Requirements Document
+
+Spec: pointer-input
 
 ## Introduction
 
@@ -22,7 +24,9 @@ tested), `packages/vision` (MediaPipe trackers and pose rules) and the hit testi
 
 ### Requirement 1: One pointer stream from several sources
 
-**User story:** As a user, I want to point with whatever I have (hand, head, mouse or touch), so that Hocus works on my device and with my body.
+**User Story:** As a user, I want to point with whatever I have (hand, head, mouse or touch), so that Hocus works on my device and with my body.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL emit one `pointer` event per tick (30 Hz by default) with `t, x, y, conf, source, pose, hits`, plus `place` and `aperture` when known.
 2. WHILE the input mode is `auto`, THE SYSTEM SHALL use a hand frame younger than 500 ms first, then a head frame younger than 500 ms, then touch, then the mouse.
@@ -32,7 +36,9 @@ tested), `packages/vision` (MediaPipe trackers and pose rules) and the hit testi
 
 ### Requirement 2: Camera mapping and smoothing
 
-**User story:** As a hand or head pointer user, I want a steady pointer that still follows quick moves, so that I can hold it on small targets.
+**User Story:** As a hand or head pointer user, I want a steady pointer that still follows quick moves, so that I can hold it on small targets.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL map camera-normalized hand coordinates to the stage with a mirrored virtual touchpad that stretches the middle `pad` fraction (default 0.6) of the camera frame to the stage and clamps to its edges.
 2. THE SYSTEM SHALL map head coordinates with a 0.25 pad over the window, so that small head turns cover the screen.
@@ -43,7 +49,9 @@ tested), `packages/vision` (MediaPipe trackers and pose rules) and the hit testi
 
 ### Requirement 3: Hit testing at capture time
 
-**User story:** As a user pointing at moving planets, I want Hocus to remember what was under my finger at that moment, so that "that" means what I saw.
+**User Story:** As a user pointing at moving planets, I want Hocus to remember what was under my finger at that moment, so that "that" means what I saw.
+
+#### Acceptance Criteria
 
 1. WHEN a sample with pose `point` is captured, THE SYSTEM SHALL hit-test at that moment and store the hits on the sample; samples with any other pose SHALL carry no hits.
 2. THE SYSTEM SHALL give the object under the camera ray quality 1, and any other visible object 0.9 inside 80% of its projected radius, falling linearly to 0 over a margin of `max(stage margin, min(36 px, 0.35 × radius))`; hits of quality 0.02 or less SHALL be dropped.
@@ -53,7 +61,9 @@ tested), `packages/vision` (MediaPipe trackers and pose rules) and the hit testi
 
 ### Requirement 4: Clicks, taps and lasso
 
-**User story:** As a mouse, touch or hand user, I want to select one thing by clicking and several things by drawing a loop, so that "these" and the actions menu have something to act on.
+**User Story:** As a mouse, touch or hand user, I want to select one thing by clicking and several things by drawing a loop, so that "these" and the actions menu have something to act on.
+
+#### Acceptance Criteria
 
 1. WHEN a press and release are within 8 px and 600 ms, THE SYSTEM SHALL emit `select` for the top hit if its quality is at least 0.5 (Shift adds to the selection), or otherwise `select` with mode `clear` and the surface `place`.
 2. WHEN the user shift-drags with the mouse and releases after more than 6 points, THE SYSTEM SHALL emit `lasso` with every object whose projected rectangle is at least 60% inside the loop, and SHALL emit nothing if no object qualifies.
@@ -63,7 +73,9 @@ tested), `packages/vision` (MediaPipe trackers and pose rules) and the hit testi
 
 ### Requirement 5: Hand and head tracking on the device
 
-**User story:** As a user, I want touchless pointing that keeps my camera image private, so that I can use Hocus with messy hands or in a kiosk.
+**User Story:** As a user, I want touchless pointing that keeps my camera image private, so that I can use Hocus with messy hands or in a kiosk.
+
+#### Acceptance Criteria
 
 1. WHEN the camera is started, THE SYSTEM SHALL open a 640 × 480 front camera stream and run MediaPipe GestureRecognizer for one hand from self-hosted model and WASM files, trying the GPU delegate first and the CPU delegate if that fails.
 2. WHERE head pointing is enabled, THE SYSTEM SHALL also run FaceLandmarker and use the nose landmark as the head pointer with confidence 0.9.
@@ -73,10 +85,24 @@ tested), `packages/vision` (MediaPipe trackers and pose rules) and the hit testi
 
 ### Requirement 6: Poses, gestures and aperture
 
-**User story:** As a camera user, I want thumbs-up and open palm to confirm and cancel, and my finger spread to show a size, so that I never need the keyboard.
+**User Story:** As a camera user, I want thumbs-up and open palm to confirm and cancel, and my finger spread to show a size, so that I never need the keyboard.
+
+#### Acceptance Criteria
 
 1. WHEN the built-in gesture score is above 0.6, THE SYSTEM SHALL classify `Thumb_Up` as `confirm`, `Open_Palm` as `cancel` and `Pointing_Up` as `point`.
 2. OTHERWISE THE SYSTEM SHALL classify `point` when the index finger is extended (tip-to-wrist distance above 1.15 × PIP-to-wrist distance) and the ring and pinky fingers are not, and `rest` in every other case.
 3. THE SYSTEM SHALL compute aperture as the thumb-tip-to-index-tip distance divided by the wrist-to-middle-knuckle distance, mapped by `(spread − 0.15) / 1.35` and clamped to [0, 1].
 4. WHEN a `confirm` or `cancel` pose is held for 450 ms, THE SYSTEM SHALL emit exactly one `gesture` event, and SHALL emit another only after the pose has changed.
 5. WHEN the hand is lost for 2 s while the input mode is `hand`, THE SYSTEM SHALL show a "hand lost" toast.
+
+### Requirement 7: Head gestures
+
+**User Story:** As a user who cannot use my hands, I want to nod to confirm and shake my head to cancel, so that I can finish a command without touching anything.
+
+#### Acceptance Criteria
+
+1. WHEN the nose path of the last 1.3 s holds at least three alternating vertical swings of at least 1.6% of the camera frame, and the horizontal movement is under 65% of the vertical movement, THE SYSTEM SHALL report a nod, which the runtime sends as a `confirm` gesture.
+2. WHEN it holds at least three alternating horizontal swings under the same rule, THE SYSTEM SHALL report a shake, which the runtime sends as a `cancel` gesture.
+3. WHEN the head moves steadily in one direction (head pointing), THE SYSTEM SHALL NOT report a gesture.
+4. WHEN a head gesture fires, THE SYSTEM SHALL clear the nose history and ignore further head gestures for 1.8 s.
+5. WHERE head gestures are enabled and head pointing is not, THE SYSTEM SHALL run face tracking without moving the pointer.

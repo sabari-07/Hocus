@@ -1,4 +1,6 @@
-# Requirements: speech-input
+# Requirements Document
+
+Spec: speech-input
 
 ## Introduction
 
@@ -23,7 +25,9 @@ timing math in `packages/core/src/timing.ts`, and the wiring in `packages/ui` (r
 
 ### Requirement 1: Push-to-talk recognition
 
-**User story:** As a user, I want to hold a key or a button while I speak, so that Hocus only listens when I mean it.
+**User Story:** As a user, I want to hold a key or a button while I speak, so that Hocus only listens when I mean it.
+
+#### Acceptance Criteria
 
 1. WHEN the user holds Space outside a text field, or presses the mic button, THE SYSTEM SHALL start Web Speech recognition in the current pack's language code (`en-US`, `hi-IN`, `ta-IN`) with interim results and up to 3 alternatives, and emit a `start` speech event.
 2. WHEN the user releases Space or the button, THE SYSTEM SHALL stop the recognizer and let it deliver its final result; THE SYSTEM SHALL emit `end` when the recognizer ends.
@@ -34,7 +38,9 @@ timing math in `packages/core/src/timing.ts`, and the wiring in `packages/ui` (r
 
 ### Requirement 2: Word timing
 
-**User story:** As a user, I want Hocus to know when I said "that", so that it looks at where I was pointing at that moment and not at the end of the sentence.
+**User Story:** As a user, I want Hocus to know when I said "that", so that it looks at where I was pointing at that moment and not at the end of the sentence.
+
+#### Acceptance Criteria
 
 1. WHEN an interim transcript first contains the k-th timed word, THE SYSTEM SHALL record that interim's time as the word's first-seen time and SHALL never change it afterwards.
 2. THE SYSTEM SHALL estimate a seen word's time as first-seen − lag, but not earlier than the speech start.
@@ -45,7 +51,9 @@ timing math in `packages/core/src/timing.ts`, and the wiring in `packages/ui` (r
 
 ### Requirement 3: Voice-activity detection
 
-**User story:** As a user, I want Hocus to hear when I actually spoke, so that word times are right even when interims arrive late.
+**User Story:** As a user, I want Hocus to hear when I actually spoke, so that word times are right even when interims arrive late.
+
+#### Acceptance Criteria
 
 1. WHILE recognition is running, THE SYSTEM SHALL measure the microphone RMS level every animation frame with a Web Audio analyser (512 samples), on the device.
 2. THE SYSTEM SHALL count a frame as voiced when RMS is above `max(0.015, 3 × noise floor)`, and SHALL adapt the noise floor slowly on quiet frames.
@@ -55,7 +63,9 @@ timing math in `packages/core/src/timing.ts`, and the wiring in `packages/ui` (r
 
 ### Requirement 4: On-device recognition and privacy
 
-**User story:** As a privacy-minded user, I want to know whether my speech leaves the device, and to keep it local when the browser can.
+**User Story:** As a privacy-minded user, I want to know whether my speech leaves the device, and to keep it local when the browser can.
+
+#### Acceptance Criteria
 
 1. WHEN the app loads or the language changes, THE SYSTEM SHALL call `SpeechRecognition.available({ langs, processLocally: true })` and record the privacy as `on-device` when it answers `available`, else `cloud`.
 2. WHERE on-device recognition is available, THE SYSTEM SHALL set `processLocally = true` on each new recognizer.
@@ -64,7 +74,9 @@ timing math in `packages/core/src/timing.ts`, and the wiring in `packages/ui` (r
 
 ### Requirement 5: Typed fallback
 
-**User story:** As a user without a microphone, or in a noisy room, I want to type the same commands, so that I can still use every feature.
+**User Story:** As a user without a microphone, or in a noisy room, I want to type the same commands, so that I can still use every feature.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL always show a labelled text box in the speech bar; WHEN it is submitted, THE SYSTEM SHALL emit a `typed` speech event with the trimmed text and the submit time, and SHALL ignore empty text.
 2. WHEN a command is typed, THE SYSTEM SHALL use the submit time as the time of every pointing word (fusion-engine 6.4).
@@ -73,7 +85,9 @@ timing math in `packages/core/src/timing.ts`, and the wiring in `packages/ui` (r
 
 ### Requirement 6: Read-back and sound cues
 
-**User story:** As a user who is not looking at the screen, I want to hear answers and short sounds, so that I know what happened.
+**User Story:** As a user who is not looking at the screen, I want to hear answers and short sounds, so that I know what happened.
+
+#### Acceptance Criteria
 
 1. WHERE voice feedback is on (it is off by default), THE SYSTEM SHALL speak each `speak` effect with `speechSynthesis` in the pack's language, choosing a voice whose language starts with the same two letters and cancelling any speech still playing.
 2. THE SYSTEM SHALL speak only `speak` effects (action replies and "what was that?"); all other announcements SHALL go to the live regions.
@@ -81,7 +95,9 @@ timing math in `packages/core/src/timing.ts`, and the wiring in `packages/ui` (r
 
 ### Requirement 7: Optional on-device proposer
 
-**User story:** As a user who phrases things freely, I want an on-device model to map my words to a known command, without it ever deciding what I pointed at.
+**User Story:** As a user who phrases things freely, I want an on-device model to map my words to a known command, without it ever deciding what I pointed at.
+
+#### Acceptance Criteria
 
 1. WHERE the proposer setting is on and the Prompt API reports `available`, THE SYSTEM SHALL ask the proposer for a rewrite of a final transcript only when that transcript parses to `no_action`.
 2. THE SYSTEM SHALL give the proposer only the app's example commands for the current language as the allowed list, and SHALL abort the request after 1500 ms.

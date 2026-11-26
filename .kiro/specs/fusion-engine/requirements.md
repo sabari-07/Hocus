@@ -1,4 +1,6 @@
-# Requirements: fusion-engine
+# Requirements Document
+
+Spec: fusion-engine
 
 ## Introduction
 
@@ -19,7 +21,9 @@ skeleton: pure, deterministic and replayable. It lives in `packages/core`.
 
 ### Requirement 1: Event log and determinism
 
-**User story:** As a developer, I want every input to be a timestamped event folded by a pure function, so that any session can be replayed, explained and tested.
+**User Story:** As a developer, I want every input to be a timestamped event folded by a pure function, so that any session can be replayed, explained and tested.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL accept input only as `HocusEvent` values carrying their own timestamp `t`.
 2. THE SYSTEM SHALL expose `step(state, event) -> { state, effects }` that does not mutate its inputs.
@@ -30,7 +34,9 @@ skeleton: pure, deterministic and replayable. It lives in `packages/core`.
 
 ### Requirement 2: Binding pointing words to objects
 
-**User story:** As a user, I want "that" to mean what I was pointing at when I said it, so that I can talk to the app the way I talk to a person.
+**User Story:** As a user, I want "that" to mean what I was pointing at when I said it, so that I can talk to the app the way I talk to a person.
+
+#### Acceptance Criteria
 
 1. WHEN the user speaks a deictic word and an object was the pointer target for at least 250 ms within the 800 ms before it, THE SYSTEM SHALL bind the word to that object.
 2. THE SYSTEM SHALL score each candidate as the sum over samples in `[tWord - 800, tWord + 300]` of `timeWeight * confidence * hitQuality * stability * dt`.
@@ -42,7 +48,9 @@ skeleton: pure, deterministic and replayable. It lives in `packages/core`.
 
 ### Requirement 3: Places, quantities and sets
 
-**User story:** As a user, I want "there", "this big" and "these" to work, so that I can move, size and select things without menus.
+**User Story:** As a user, I want "there", "this big" and "these" to work, so that I can move, size and select things without menus.
+
+#### Acceptance Criteria
 
 1. WHEN a place word (here, there) is resolved, THE SYSTEM SHALL bind it to the pointer's surface point at the sample with the highest weighted stability near tWord.
 2. WHEN a quantity phrase ("this big") is resolved, THE SYSTEM SHALL bind it to the mean hand aperture near tWord, in the range 0 to 1.
@@ -53,7 +61,9 @@ skeleton: pure, deterministic and replayable. It lives in `packages/core`.
 
 ### Requirement 4: Discourse memory, names and type constraints
 
-**User story:** As a user, I want "it" and names to carry over between commands, so that I do not have to point again for every step.
+**User Story:** As a user, I want "it" and names to carry over between commands, so that I do not have to point again for every step.
+
+#### Acceptance Criteria
 
 1. WHEN an anaphor (it, them) is used without fresh pointing evidence of at least `itOverrideEvidence`, THE SYSTEM SHALL bind it to the object(s) of the last executed action.
 2. WHEN fresh pointing evidence is at least `itOverrideEvidence` and unambiguous, THE SYSTEM SHALL bind the anaphor to the pointed object instead.
@@ -64,7 +74,9 @@ skeleton: pure, deterministic and replayable. It lives in `packages/core`.
 
 ### Requirement 5: Safety, undo and repair
 
-**User story:** As a user, I want to see what Hocus understood before it acts and to take anything back, so that mistakes are cheap.
+**User Story:** As a user, I want to see what Hocus understood before it acts and to take anything back, so that mistakes are cheap.
+
+#### Acceptance Criteria
 
 1. WHEN a command resolves, THE SYSTEM SHALL enter a preview for 600 ms showing the interpreted command before executing it.
 2. WHEN the user cancels during preview (Esc, "stop", open palm), THE SYSTEM SHALL discard the command and SHALL NOT change the document.
@@ -78,7 +90,9 @@ skeleton: pure, deterministic and replayable. It lives in `packages/core`.
 
 ### Requirement 6: Speech timing and self-calibration
 
-**User story:** As a user with any speaking speed and network, I want Hocus to learn my delay, so that it binds the right object more often over time.
+**User Story:** As a user with any speaking speed and network, I want Hocus to learn my delay, so that it binds the right object more often over time.
+
+#### Acceptance Criteria
 
 1. WHEN an interim transcript first contains the k-th deictic word of an utterance, THE SYSTEM SHALL set that word's tWord to the interim time minus the calibrated lag.
 2. WHEN a final transcript contains deictic words never seen in interims, THE SYSTEM SHALL estimate their tWord by their relative position between speech start and the final event, minus the lag.
@@ -89,8 +103,13 @@ skeleton: pure, deterministic and replayable. It lives in `packages/core`.
 
 ### Requirement 7: Explainability
 
-**User story:** As a developer or judge, I want to see why Hocus chose a target, so that I can trust and tune it.
+**User Story:** As a developer or judge, I want to see why Hocus chose a target, so that I can trust and tune it.
+
+#### Acceptance Criteria
 
 1. WHEN a frame is resolved, THE SYSTEM SHALL emit a `DecisionRecord` with the utterance, each word's tWord, every candidate's evidence and its parts, the parameters and the result.
 2. THE SYSTEM SHALL keep the last 20 decision records in state for the X-ray view.
 3. WHEN the same record's inputs are re-resolved with different parameters, THE SYSTEM SHALL return the decision those parameters imply, without side effects (live tuning).
+4. WHILE the user is still speaking, THE SYSTEM SHALL be able to preview what the partial transcript would bind to, using the same parser, timing and resolver, without changing state or emitting effects.
+5. WHEN a typed command is previewed and then submitted at the same time with the same state, THE SYSTEM SHALL reach the same resolution status and bindings as the preview showed.
+6. THE SYSTEM SHALL expose the live evidence ranking for a hypothetical pointing word at any time, so the interface can show which object "that" would mean right now.

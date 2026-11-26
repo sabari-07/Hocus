@@ -1,4 +1,4 @@
-# Design: planet-explorer
+# Design Document
 
 ## Overview
 
@@ -19,8 +19,11 @@ flowchart LR
   S -->|moving holders, hits at capture| E
 ```
 
-## Components
+## Architecture
 
+Planet Explorer is one `defineApp` definition in `apps/planet-explorer/src/app.ts`, a three.js scene in `scene.ts` and a mount in `main.tsx`; body facts come from `apps/planet-explorer/src/data/solar-system.json`. See Overview.
+
+## Components and Interfaces
 | File | Responsibility | Requirements |
 |---|---|---|
 | `apps/planet-explorer/src/data/solar-system.json` | `source` (name, URLs, `retrieved: 2026-11-22`, note), 10 `bodies`, 8 `quiz` entries | 1.1, 1.2 |
@@ -58,22 +61,53 @@ Every action has `mutates: false`. App verbs per language add the question phras
 - `showMoons(id)` draws up to 14 small spheres; the real count is in the reply.
 - Chips show the names of the focused, described and compared bodies.
 
-## Correctness properties
+## Data Models
 
-| Check | Where | Requirements |
-|---|---|---|
-| Lint, examples in en / hi / ta, unique selectables | `tests/unit/apps.test.ts` | 6.1 |
-| "compare this with that" binds Mars then Earth in spoken order | `tests/replays/planets-compare.replay.json` | 3.1 |
-| Quiz started by a typed command and answered by "that one" on Venus | `tests/replays/planets-quiz.replay.json` | 5.1, 5.2 |
-| Hindi "यह क्या है" while pointing at Jupiter | `tests/replays/planets-hindi.replay.json` | 2.1, 6.1 |
-| `src/app.ts` within 300 lines (208 today) | `scripts/check-app-size.mjs` | 6.5 |
+The app state and action reducers are defined in `apps/planet-explorer/src/app.ts`; the body facts are in `data/solar-system.json`; each body is exposed to the engine as a `Selectable` (`packages/core/src/types.ts`).
 
-## Error handling
+## Correctness Properties
+
+### Property 1: Lint, examples in en / hi / ta, unique selectables
+
+Where: `tests/unit/apps.test.ts`
+
+**Validates: Requirements 6.1**
+
+### Property 2: "compare this with that" binds Mars then Earth in spoken order
+
+Where: `tests/replays/planets-compare.replay.json`
+
+**Validates: Requirements 3.1**
+
+### Property 3: Quiz started by a typed command and answered by "that one" on Venus
+
+Where: `tests/replays/planets-quiz.replay.json`
+
+**Validates: Requirements 5.1, 5.2**
+
+### Property 4: Hindi "यह क्या है" while pointing at Jupiter
+
+Where: `tests/replays/planets-hindi.replay.json`
+
+**Validates: Requirements 2.1, 6.1**
+
+### Property 5: `src/app.ts` within 300 lines (208 today)
+
+Where: `scripts/check-app-size.mjs`
+
+**Validates: Requirements 6.5**
+
+
+## Error Handling
 
 - Requests that do not fit a body are filtered by capability before scoring: the Sun is never a candidate for
   "how far" and only planets for "moons".
 - Missing values (for example the Sun's day and moons) show as "—" in the panel.
 - Quiz questions cycle with `index % QUIZ.length`, so the quiz never runs out.
+
+## Testing Strategy
+
+Property tests are listed under Correctness Properties. `npm run check` runs the determinism lint, the app-size budget, the typecheck and all tests (unit, properties, replays).
 
 ## Known gaps
 

@@ -28,3 +28,15 @@ In three.js code import the same values from `packages/three/src/palette.ts`.
 - **High-contrast theme:** `[data-theme="contrast"]` uses pure white on black and thicker outlines.
 - **3D outlines:** hover = violet, locked = teal, ambiguous candidates = amber with numbered badges.
 - Spooky decoration outside, plain readable controls inside.
+
+## Immersive shell (added with the redesign)
+
+- The 3D stage fills the viewport. Panels, the HUD and the speech dock **float over it as glass** (`.hx-glass`: translucent
+  panel colour, 1 px line, 16 px blur). No full-height sidebars, no header or footer bar.
+- `--hx-accent` is the per-app accent (default amber; `data-app="observatory"` = teal; `data-app="board"` = cream). Use it
+  for app identity. The Wisp pointer stays amber in every app.
+- Overlays never count as pointing: only the canvas and label layer do (the pointer hub checks the event target).
+- Anything that explains a decision belongs **in the scene** (spell threads, evidence glow, numbered ask badges), not only
+  in the X-ray panel.
+- Every new toolbar button needs an accessible name that survives the narrow-screen label hiding (hide labels visually,
+  never with `display: none`).

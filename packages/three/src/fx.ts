@@ -70,5 +70,7 @@ export function burst(scene: THREE.Scene, at: THREE.Vector3, color: number = PAL
 
 /** Smooth critically-damped approach used for gentle object/camera motion. */
 export function damp(current: number, target: number, lambda: number, dt: number) {
-  return THREE.MathUtils.damp(current, target, lambda, dt);
+  // 1 - exp(-lambda * dt) is a blend factor in [0, 1) only for dt >= 0; a negative dt would extrapolate wildly.
+  const safe = Number.isFinite(dt) ? Math.min(Math.max(dt, 0), 0.25) : 0;
+  return THREE.MathUtils.damp(current, target, lambda, safe);
 }

@@ -1,4 +1,10 @@
-# Implementation plan: hocus-lab
+# Implementation Plan: hocus-lab
+
+## Overview
+
+Tasks for the hocus-lab spec. Checkbox state reflects the current code; each task cites the requirements it covers. Tasks marked with `*` are optional test tasks.
+
+## Tasks
 
 - [x] 1. X-ray decision view (`packages/devtools/src/XRay.tsx`)
   - [x] 1.1 Lanes: pointer segments, word windows and times, candidate evidence with `minEvidence` line
@@ -44,3 +50,71 @@
 
 - [x] 5. Lab lives inside every app as the X-ray sheet (Decision, Timeline simulator, Recorder tabs); the standalone `dev:lab` script was removed instead of adding a fourth front end
   - _Requirements: 1.1, 4.1_
+
+## Task Dependency Graph
+
+Tasks build on each other in numeric order, so each wave holds one top-level task. Sub-tasks of a task run in its wave.
+
+```mermaid
+flowchart LR
+  T1
+  T1 --> T2
+  T2 --> T3
+  T3 --> T4
+  T4 --> T5
+```
+
+```json
+{
+  "waves": [
+    {
+      "id": 0,
+      "tasks": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4"
+      ]
+    },
+    {
+      "id": 1,
+      "tasks": [
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.4",
+        "2.5",
+        "2.6"
+      ]
+    },
+    {
+      "id": 2,
+      "tasks": [
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4",
+        "3.5",
+        "3.6"
+      ]
+    },
+    {
+      "id": 3,
+      "tasks": [
+        "4"
+      ]
+    },
+    {
+      "id": 4,
+      "tasks": [
+        "5"
+      ]
+    }
+  ]
+}
+```
+
+## Notes
+
+- Requirement ids refer to `requirements.md` in this folder and are cited by test titles; do not renumber them.
+- Do not mark a task done until its code and tests exist.

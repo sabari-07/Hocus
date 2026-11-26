@@ -1,4 +1,6 @@
-# Requirements: hocus-lab
+# Requirements Document
+
+Spec: hocus-lab
 
 ## Introduction
 
@@ -20,7 +22,9 @@ the replay corpus that runs in CI. It lives in `packages/devtools` (`XRay.tsx`, 
 
 ### Requirement 1: X-ray decision view
 
-**User story:** As a developer or a judge, I want to see what was pointed at, when each word was heard and how the candidates scored, so that I can trust and tune the engine.
+**User Story:** As a developer or a judge, I want to see what was pointed at, when each word was heard and how the candidates scored, so that I can trust and tune the engine.
+
+#### Acceptance Criteria
 
 1. WHEN the X-ray is open (top-bar button or the `X` key), THE SYSTEM SHALL show the selected decision (the latest by default) as three lanes over 2.6 s before to 0.6 s after the command: pointer segments coloured per object with opacity by stability, each timed word with its window and binding, and the top 4 candidates' evidence bars with the `minEvidence` line.
 2. THE SYSTEM SHALL list the last 6 decisions as buttons marked by outcome, and selecting one SHALL show it.
@@ -31,7 +35,9 @@ the replay corpus that runs in CI. It lives in `packages/devtools` (`XRay.tsx`, 
 
 ### Requirement 2: Recorder, export and load
 
-**User story:** As a developer, I want to save a real session and load it again, so that a bug seen once can be studied and kept.
+**User Story:** As a developer, I want to save a real session and load it again, so that a bug seen once can be studied and kept.
+
+#### Acceptance Criteria
 
 1. THE runtime SHALL keep every dispatched event in the session log, dropping the oldest beyond 60,000 events, and the Recorder tab SHALL show the event count.
 2. WHEN the user exports a replay, THE SYSTEM SHALL download `<app id>-<timestamp>.replay.json` with `version: 1`, `origin: "recorded"`, the language, `lagMs` and `minEvidence`, all logged events, and an `expected` block with each decision's text, outcome and (when resolved) bindings, plus the final app state.
@@ -41,7 +47,9 @@ the replay corpus that runs in CI. It lives in `packages/devtools` (`XRay.tsx`, 
 
 ### Requirement 3: Replay corpus
 
-**User story:** As a maintainer, I want saved sessions to run as tests, so that sessions must keep resolving the same way after every change.
+**User Story:** As a maintainer, I want saved sessions to run as tests, so that sessions must keep resolving the same way after every change.
+
+#### Acceptance Criteria
 
 1. THE SYSTEM SHALL keep replay files in `tests/replays/*.replay.json`, each validated by `parseReplayFile`.
 2. WHEN `tests/replays/replays.test.ts` runs, THE SYSTEM SHALL fold every file through the real app's engine with the file's config and language, and SHALL require the decisions (text, outcome, bindings) and, when present, the final app state to equal the file's `expected` block.
@@ -52,7 +60,9 @@ the replay corpus that runs in CI. It lives in `packages/devtools` (`XRay.tsx`, 
 
 ### Requirement 4: Timeline simulator
 
-**User story:** As a developer without a camera, I want to build a pointer timeline and a sentence by hand, so that I can see how the resolver decides edge cases.
+**User Story:** As a developer without a camera, I want to build a pointer timeline and a sentence by hand, so that I can see how the resolver decides edge cases.
+
+#### Acceptance Criteria
 
 1. THE simulator SHALL let the user list pointer segments (target or nothing, duration, fast sweep or not), type an utterance and set the time of the first pointing word.
 2. WHEN the user runs the simulation, THE SYSTEM SHALL build samples every 33 ms (60 px per sample for a fast sweep, 1 px jitter otherwise), parse the utterance with the app's parse context, set word times at t, t + 400 and t + 800 ms, and call `resolveFrame` with `DEFAULT_CONFIG`.

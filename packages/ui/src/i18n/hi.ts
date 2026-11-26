@@ -29,4 +29,13 @@ export const hi: Partial<Record<keyof typeof en, string>> = {
   next: 'आगे',
   noDecision: 'Hocus कैसे फ़ैसला करता है, यह देखने के लिए कोई आदेश बोलें या लिखें।',
   emptyScene: 'अभी यहाँ कुछ नहीं है। "वहाँ एक कद्दू रखो" कहें।',
+  herePlace: "यह जगह",
+  wouldAsk: "दो चीज़ें पास हैं। Hocus पूछेगा कौन-सी।",
+  pointFirstShort: "किसी चीज़ की ओर इशारा करें…",
+  spellLog: "मंत्र सूची",
+  watchItWork: "चलता देखें",
+  tryNow: "अभी आज़माएँ",
+  headGestures: "हाँ के लिए सिर हिलाएँ, ना के लिए घुमाएँ",
+  gpuLost: "आपके ग्राफ़िक्स ड्राइवर ने 3D दृश्य रोक दिया। यह आमतौर पर अपने आप लौट आता है।",
+  reload: "फिर से लोड करें",
 };

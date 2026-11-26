@@ -27,6 +27,13 @@ this repository; nothing is staged.
 | 9 | Moving planets were hard to point at. | Using it | Time slows to 15% while the pointer rests on any body |
 | 10 | Windows PowerShell `Set-Content` re-encoded `é`, `·` and Devanagari as mojibake and added BOMs. | E2E test could not find the button "Pumpkin purée" | Repaired the files; added a rule to `.kiro/steering/tech.md` |
 | 11 | First benchmark simulator always moved to another object after speaking, so the "pointer at final transcript" baseline scored 0%: unfair. | Reading the numbers critically | Simulator now keeps pointing 40%, drifts to empty space 30%, moves on 30%; documented in `docs/benchmark.md` |
+| 15 | `damp()` extrapolated when the frame time was negative: a pumpkin reached a scale of **-2,421,190** at 1024×768 and the room drew as black polygons. | Looking at a tablet screenshot, then reading `scale` from the page | `Stage` clamps the frame time to ≥ 0 and `damp` clamps its own input |
+| 16 | A lost WebGL context left a blank white stage with no message. | A flaky screenshot that showed a white canvas | `Stage.onContextLoss`, a visible banner, and an e2e test that forces `WEBGL_lose_context` |
+| 17 | On a phone the toolbar ran off the right edge (three buttons unreachable), the dock was 207 px tall, and portrait cropped the room to a window and a pumpkin. | Phone screenshot | Wrapped HUD with a scrollable toolbar, compact dock, wider field of view in portrait |
+| 18 | Kiro's own `validate_spec_format` rejected all 30 spec files (missing "Acceptance Criteria" headings, property-block format, dependency graph). | A sub-agent ran the validator | The sub-agent normalised the files; all 30 now pass |
+| 19 | The image viewer returned a cached older screenshot for a changed file, so I reviewed stale pixels twice. | File byte sizes did not match the picture | Copy screenshots to a new filename before viewing |
+| 20 | Echo cards showed the same command twice (the preview and then "Done"). | Screenshot review | A newer message replaces an older one that it starts with |
+| 21 | The dashboard layout (header, two sidebars, footer) hid the 3D world and looked like any admin page. | The user said so, and last year's winner comparison | Full-bleed stage with floating glass panels, speech dock, spell threads, live ghost preview, per-app themes |
 
 ## What the property tests did and did not find
 
@@ -36,6 +43,7 @@ this repository; nothing is staged.
 - No real counterexample from a property has been found yet. **Do not stage one for the video.** If one appears in
   the nightly soak (`crew/hocus-soak-tester` or `.github/workflows/nightly.yml`), save it under
   `tests/properties/regressions/` and record it here.
+- **P21** (a live preview equals what the real command then does, and never changes state) and **P22** (nod versus shake classification, and steady drift never fires) were added when the UI was rebuilt. Both passed first time; their value is as guards for the live preview and head gestures.
 - **Stryker** first reported nearly every mutant as surviving. That was a setup bug, not weak tests: the sandbox resolved `@hocus/core` through the symlink to the original sources, so no mutant ran. After fixing the aliases the real score was 50.4% on evidence/timing/calibration; `calibrateLag` was at 19% because only the nudge was tested. New exact-value tests raised those files to 77.4%. Full table: `docs/mutation.md`. `resolver.ts` (46%) is the weakest file and the next target.
 
 ## Spec review by a sub-agent
@@ -53,10 +61,6 @@ plan and the code disagreed. Kiro fixed these:
 - missing unit tests for pose classification, mapping, word timing, "not that", "what was that" and `pointAction`.
 
 Remaining unchecked tasks are listed in each `.kiro/specs/*/tasks.md`.
-
-| 12 | Stryker sandbox imported the unmutated sources through workspace symlinks | Implausible "everything survives" score | Aliases in `stryker.vitest.config.ts` |
-| 13 | Test helper passed an empty names map, so "the bat" did not resolve in a unit test while it did in the app | `tests/unit/resolver.test.ts` | Helper now uses the engine's names map |
-| 14 | UI overlays (drawers, X-ray, buttons) counted as pointing at the 3D object underneath | Screenshot review | Pointer hub only counts events whose target is the canvas or label layer |
 
 ## Spec changes
 

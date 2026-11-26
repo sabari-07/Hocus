@@ -1,4 +1,4 @@
-# Design: lexicon-parser
+# Design Document
 
 ## Overview
 
@@ -23,8 +23,11 @@ flowchart LR
   FL --> FR[CommandFrame with timed slots]
 ```
 
-## Components
+## Architecture
 
+The parser (`packages/core/src/parser.ts`) turns text into a `CommandFrame` using the language packs in `packages/core/src/lexicon/` (`en.ts`, `hi.ts`, `ta.ts`). It is pure and has no knowledge of pointing evidence; the resolver binds slots later. See Overview for the pipeline.
+
+## Components and Interfaces
 | File | Responsibility | Requirements |
 |---|---|---|
 | `packages/core/src/parser.ts` | `tokenize`, `tagTokens`, `timedWords`, `parse`, `timedSlots`, `withWordTimes`; internal `buildEntries`, `tokenMatches`, `levenshtein1`, `detectControl`, `collectRefs`, `available`, `hintFor` | 1-6 |
@@ -99,24 +102,39 @@ the whole remaining utterance with each control list in a fixed order. Ordinals 
 removing "one", "वाला" and "ஒன்று". Because the match is on the whole utterance, "make that bigger" never
 triggers `thisOne` even though "that" is a `thisOne` phrase.
 
-## Correctness properties
+## Data Models
 
-| Id | Property | Requirements |
-|---|---|---|
-| P10 | Every grammar sentence (scale, recolor, move, compare, delete, rotate, with polite prefixes and tails) parses to its expected action and literals; random grapheme strings never throw | 1.1, 1.4 |
-| P14 | Every permutation of eight Hindi/Tamil commands gives the same action and slots | 2.2 |
-| P05 | Any text in any language: `step` never throws and `no_action` leaves the document unchanged | 1.4 |
+Output types are in `packages/core/src/types.ts` (`CommandFrame`, `SlotValue`, `ControlIntent`, `ParseResult`). A language pack is a `LexiconPack` (`packages/core/src/lexicon/types.ts`). Apps supply an `AppVocabulary` (`packages/core/src/app.ts`).
+
+## Correctness Properties
+
+### Property 1: P10 Every grammar sentence (scale, recolor, move, compare, delete, rotate, with polite prefixes and tails) parses to its expected action and literals; random grapheme strings never throw
+
+**Validates: Requirements 1.1, 1.4**
+
+### Property 2: P14 Every permutation of eight Hindi/Tamil commands gives the same action and slots
+
+**Validates: Requirements 2.2**
+
+### Property 3: P05 Any text in any language: `step` never throws and `no_action` leaves the document unchanged
+
+**Validates: Requirements 1.4**
+
 
 Unit tests in `tests/unit/parser.test.ts` cover examples for requirements 1-6 (including homophones, naming,
 spatial words, Hindi and Tamil prefix matching). `tests/unit/apps.test.ts` runs `lintLexicon` on the three apps
 and checks that every Spellbook example parses to its own action in every language.
 
-## Error handling
+## Error Handling
 
 - Any string is accepted. Empty input and unmatched input return `no_action` with a hint; nothing throws.
 - Unknown words never cause a guess: they are only used as a name, and only when a naming phrase is present
   (or the action has a `name` slot).
 - Lint issues are data (`severity`, `lang`, `code`, `message`), so the MCP tool, the CLI and tests share them.
+
+## Testing Strategy
+
+Property tests are listed under Correctness Properties. `npm run check` runs the determinism lint, the app-size budget, the typecheck and all tests (unit, properties, replays).
 
 ## Known limitations
 

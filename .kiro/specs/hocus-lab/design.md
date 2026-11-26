@@ -1,4 +1,4 @@
-# Design: hocus-lab
+# Design Document
 
 ## Overview
 
@@ -21,8 +21,11 @@ flowchart LR
   SIM[Simulator: segments + utterance] -->|resolveFrame DEFAULT_CONFIG| SIM
 ```
 
-## Components
+## Architecture
 
+Hocus Lab is the X-ray sheet inside every app: `packages/devtools/src/XRay.tsx` and `Simulator.tsx`, with the recorder in `packages/ui/src/runtime.ts`. It reads the same event log and decision records as the engine. See Overview.
+
+## Components and Interfaces
 | File | Responsibility | Requirements |
 |---|---|---|
 | `packages/devtools/src/XRay.tsx` | `XRay` (tabs Decision / Simulator / Recorder, history pills, `TUNABLE` sliders, scrub, reset, export, copy test, load), `Lanes`, `segments`, `nearest`, `shiftFrame` | 1, 2.1, 2.4 |
@@ -65,20 +68,41 @@ The generator places pointer samples at 30 Hz (hit quality 1, confidence 0.9, 1 
 350 ms before the end of each dwell (or at explicit offsets), and adds two ticks after each step so every
 preview executes before the next step.
 
-## Correctness properties
+## Data Models
 
-| Check | Where | Requirements |
-|---|---|---|
-| Every corpus file reproduces its decisions and final state | `tests/replays/replays.test.ts` | 3.2 |
-| The MCP replay tool reports a match for the committed corpus | `tests/unit/mcp.test.ts` | 3.6 |
-| Same log, same result; prefix replay equals stepping | P06, P18 (fusion-engine 1.3, 1.4) | 3.2 |
+The lab reads `DecisionRecord` and `HocusEvent` from `packages/core/src/types.ts`. Saved sessions use `ReplayFile` (`ReplayFileSchema` and `parseReplayFile` in `packages/core/src/schemas.ts`).
 
-## Error handling
+## Correctness Properties
+
+### Property 1: Every corpus file reproduces its decisions and final state
+
+Where: `tests/replays/replays.test.ts`
+
+**Validates: Requirements 3.2**
+
+### Property 2: The MCP replay tool reports a match for the committed corpus
+
+Where: `tests/unit/mcp.test.ts`
+
+**Validates: Requirements 3.6**
+
+### Property 3: Same log, same result; prefix replay equals stepping
+
+Where: P06, P18 (fusion-engine 1.3, 1.4)
+
+**Validates: Requirements 3.2**
+
+
+## Error Handling
 
 - `parseReplayFile` throws on an invalid file before the session is touched.
 - `reresolve` returns `null` for records without a frame (for example `no_action`), and the X-ray then shows
   the recorded resolution.
 - The simulator does nothing if the parsed action is not in the app.
+
+## Testing Strategy
+
+Property tests are listed under Correctness Properties. `npm run check` runs the determinism lint, the app-size budget, the typecheck and all tests (unit, properties, replays).
 
 ## Known gaps
 

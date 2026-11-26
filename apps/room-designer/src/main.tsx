@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { HocusApp, SceneList, appLinks, type JudgeStep } from '@hocus/ui';
-import { CATALOG, TYPES, roomApp, type Room } from './app.ts';
+import { CATALOG, TYPES, roomApp, type ItemType, type Room } from './app.ts';
 import { createRoomScene } from './scene.ts';
 
 /** Judge Mode: a scripted session that runs through the real engine and real 3D hit testing. */
@@ -15,6 +15,11 @@ const JUDGE: JudgeStep[] = [
   { say: 'lights on', caption: 'Say “undo” any time. Your turn!' },
 ];
 
+const ICON: Record<ItemType, string> = {
+  pumpkin: '🎃', ghost: '👻', bat: '🦇', candle: '🕯️', cobweb: '🕸️', coffin: '⚰️', lantern: '🏮',
+  tree: '🌳', skeleton: '💀', cat: '🐈‍⬛', cauldron: '🍲', gravestone: '🪦', spider: '🕷️', window: '🌙',
+};
+
 const step = 0.8;
 const nudge = (dx: number, dz: number) => (rt: { command: (a: string, args: Record<string, unknown>) => void; state: { doc: { app: Room }; selection: { ids: string[] } } }) => {
   const id = rt.state.selection.ids[0];
@@ -25,26 +30,48 @@ const nudge = (dx: number, dz: number) => (rt: { command: (a: string, args: Reco
 createRoot(document.getElementById('root')!).render(
   <HocusApp
     app={roomApp}
-    stage={{ label: 'A 3D haunted room with props you can point at', cameraPosition: [0, 3.4, 9.2], lookAt: [0, 1.3, 0], fov: 46 }}
+    theme="candle"
+    leftLabel="Crypt"
+    rightLabel="Scene"
+    stage={{ label: 'A 3D haunted room with props you can point at', cameraPosition: [0, 3.2, 10.2], lookAt: [0, 1.3, 0], fov: 46 }}
     createScene={createRoomScene}
     judge={JUDGE}
     links={appLinks()}
     topExtra={(rt) => (
-      <button className="hx-btn hx-btn--ghost" onClick={() => { const a = document.createElement('a'); a.href = rt.stage!.snapshot(); a.download = 'haunted-room.png'; a.click(); }}>
-        🖼 Export PNG
+      <button
+        className="hx-tool"
+        onClick={() => {
+          const a = document.createElement('a');
+          a.href = rt.stage!.snapshot();
+          a.download = 'haunted-room.png';
+          a.click();
+        }}
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19h14" />
+        </svg>
+        <span className="hx-tool__label">Export PNG</span>
       </button>
     )}
     left={(rt) => (
       <nav aria-label="Crypt palette">
         <h2>Crypt</h2>
-        <p className="hx-small hx-muted">Say “put a pumpkin there”, or click to add one in the middle.</p>
-        <div className="hx-menu">
+        <p className="hx-small hx-muted">Say “put a pumpkin there”, or click a tile to add one.</p>
+        <div className="hx-tiles">
           {TYPES.map((t) => (
-            <button key={t} className="hx-btn" onClick={() => rt.command('place', { what: t, where: { x: 0, y: 0, world: { x: 0, y: CATALOG[t].y ?? 0, z: 0.5 }, surface: CATALOG[t].mount === 'wall' ? 'wall' : 'floor' } })}>
+            <button
+              key={t}
+              className="hx-tile"
+              onClick={() => rt.command('place', { what: t, where: { x: 0, y: 0, world: { x: 0, y: CATALOG[t].y ?? 0, z: 0.5 }, surface: CATALOG[t].mount === 'wall' ? 'wall' : 'floor' } })}
+            >
+              <span className="hx-tile__icon" aria-hidden="true">
+                {ICON[t]}
+              </span>
               {CATALOG[t].label}
             </button>
           ))}
         </div>
+        <h2>Rooms</h2>
         <div className="hx-menu">
           {['Crypt', 'Parlor', 'Graveyard'].map((n, i) => (
             <button key={n} className="hx-btn hx-btn--ghost" onClick={() => rt.command('starter', { which: i + 1 })}>

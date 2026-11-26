@@ -157,7 +157,7 @@ export function SettingsDrawer() {
   const set = rt.updateSettings.bind(rt);
   const modes: InputMode[] = ['auto', 'hand', 'head', 'mouse', 'touch'];
   const modeLabel = { auto: t('inputAuto'), hand: t('inputHand'), head: t('inputHead'), mouse: t('inputMouse'), touch: t('inputTouch') };
-  const check = (key: 'voiceFeedback' | 'sounds' | 'reducedMotion' | 'highContrast' | 'largeTargets' | 'alwaysListening' | 'proposer' | 'headPointer', label: string) => (
+  const check = (key: 'voiceFeedback' | 'sounds' | 'reducedMotion' | 'highContrast' | 'largeTargets' | 'alwaysListening' | 'proposer' | 'headPointer' | 'headGestures', label: string) => (
     <label className="hx-check">
       <input type="checkbox" checked={st[key]} onChange={(e) => set({ [key]: e.target.checked })} />
       {label}
@@ -186,6 +186,7 @@ export function SettingsDrawer() {
           )}
           {check('headPointer', t('inputHead'))}
         </div>
+        {check('headGestures', t('headGestures'))}
         <label className="hx-field">
           <span>
             {t('sensitivity')}: {Math.round(st.smoothing * 100)}%

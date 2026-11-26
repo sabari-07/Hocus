@@ -78,6 +78,31 @@ test.describe('Haunted Room Designer', () => {
     await axe(page);
   });
 
+  test('a lost WebGL context shows a message, then the 3D view recovers', async ({ page }) => {
+    await open(page, ROOM);
+    await page.evaluate(() => {
+      const gl = (window as any).__hocus.stage.renderer.getContext();
+      (window as any).__lose = gl.getExtension('WEBGL_lose_context');
+      (window as any).__lose.loseContext();
+    });
+    await expect(page.getByRole('alert').filter({ hasText: /graphics driver/ })).toBeVisible();
+    await page.evaluate(() => (window as any).__lose.restoreContext());
+    await expect(page.getByRole('alert').filter({ hasText: /graphics driver/ })).toBeHidden({ timeout: 5000 });
+    // The scene draws again: hit testing still finds the pumpkin.
+    const p = await page.evaluate(() => (window as any).__hocus.stage.screenOf('pumpkin-1'));
+    expect(p).not.toBeNull();
+  });
+
+  test('live preview: typing a command shows what Hocus would do before it is sent', async ({ page }) => {
+    await open(page, ROOM);
+    await page.getByRole('navigation', { name: 'Scene' }).getByRole('button', { name: 'Black cat 1' }).click();
+    await page.fill('#hx-typed', 'rotate that');
+    await expect(page.locator('.hx-ghost')).toContainText('Rotate Black cat 1', { timeout: 5000 });
+    await expect(page.locator('.hx-word--live')).toContainText('Black cat 1');
+    // Nothing has changed yet: the ghost is a preview only.
+    expect(await page.evaluate(() => (window as any).__hocus.state.doc.app.items.find((i: any) => i.id === 'cat-1').rotation)).toBe(0);
+  });
+
   test('X-ray shows why Hocus chose the target', async ({ page }) => {
     await open(page, ROOM);
     await page.getByRole('navigation', { name: 'Scene' }).getByRole('button', { name: 'Black cat 1' }).click();

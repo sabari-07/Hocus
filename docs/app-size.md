@@ -8,18 +8,18 @@ Tracking, speech, parsing, fusion, dialogue, undo, replay, X-ray, Spellbook, set
 
 | App | Behaviour lines (app.ts) | Budget | Screen-design lines | Status |
 |---|---|---|---|---|
-| apps/room-designer | 230 | 300 | 463 | within budget |
-| apps/planet-explorer | 208 | 300 | 278 | within budget |
-| examples/kitchen-board | 82 | 150 | 115 | within budget |
+| apps/room-designer | 230 | 300 | 489 | within budget |
+| apps/planet-explorer | 208 | 300 | 320 | within budget |
+| examples/kitchen-board | 82 | 150 | 117 | within budget |
 
 ## Skeleton packages
 
 | Package | Lines |
 |---|---|
-| @hocus/core | 2868 |
+| @hocus/core | 2918 |
 | @hocus/input | 287 |
-| @hocus/vision | 199 |
+| @hocus/vision | 256 |
 | @hocus/speech | 358 |
-| @hocus/three | 401 |
-| @hocus/ui | 1718 |
+| @hocus/three | 454 |
+| @hocus/ui | 2106 |
 | @hocus/devtools | 352 |

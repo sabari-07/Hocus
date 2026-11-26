@@ -1,4 +1,10 @@
-# Implementation plan: kitchen-board
+# Implementation Plan: kitchen-board
+
+## Overview
+
+Tasks for the kitchen-board spec. Checkbox state reflects the current code; each task cites the requirements it covers. Tasks marked with `*` are optional test tasks.
+
+## Tasks
 
 - [x] 1. App definition (`examples/kitchen-board/src/app.ts`)
   - [x] 1.1 Cards, selectables, `show`
@@ -20,3 +26,54 @@
 
 - [x] 4. Running timers with a countdown and an alert
   - _Requirements: 2.2_
+
+## Task Dependency Graph
+
+Tasks build on each other in numeric order, so each wave holds one top-level task. Sub-tasks of a task run in its wave.
+
+```mermaid
+flowchart LR
+  T1
+  T1 --> T2
+  T2 --> T3
+  T3 --> T4
+```
+
+```json
+{
+  "waves": [
+    {
+      "id": 0,
+      "tasks": [
+        "1.1",
+        "1.2"
+      ]
+    },
+    {
+      "id": 1,
+      "tasks": [
+        "2.1",
+        "2.2"
+      ]
+    },
+    {
+      "id": 2,
+      "tasks": [
+        "3.1",
+        "3.2"
+      ]
+    },
+    {
+      "id": 3,
+      "tasks": [
+        "4"
+      ]
+    }
+  ]
+}
+```
+
+## Notes
+
+- Requirement ids refer to `requirements.md` in this folder and are cited by test titles; do not renumber them.
+- Do not mark a task done until its code and tests exist.

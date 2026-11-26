@@ -106,7 +106,17 @@ export interface Engine<S> {
   parseContext(state: CoreState<S>): ParseContext;
   /** Re-resolve a decision with different parameters (live tuning, no side effects). */
   reresolve(record: DecisionRecord, patch: Partial<FusionConfig>): Resolution | null;
+  /** What a partial transcript would bind to if it were final at `t` (no side effects). */
+  preview(state: CoreState<S>, text: string, t: Millis, typed?: boolean): LivePreview;
+  /** Evidence ranking if a pointing word were spoken at `t` (no side effects). */
+  liveEvidence(state: CoreState<S>, t: Millis): CandidateEvidence[];
 }
+
+export type LivePreview =
+  | { kind: 'empty' }
+  | { kind: 'none' }
+  | { kind: 'control'; intent: string }
+  | { kind: 'frame'; action: string; resolution: Resolution; sentence?: string };
 
 const MAX_HISTORY = 100;
 const MAX_DECISIONS = 20;
@@ -759,6 +769,54 @@ export function createEngine<S>(app: AppDefinition<S>, baseConfig: Partial<Fusio
     return execute(next, pending, fx);
   }
 
+  /**
+   * Live preview (fusion-engine 7.4): what would this partial transcript bind to if it were final at `t`?
+   * Pure: same parser, timing and resolveFrame as a real utterance, but no state change and no effects.
+   */
+  function preview(s: CoreState<S>, rawText: string, t: Millis, typed = false): LivePreview {
+    const text = rawText.trim();
+    if (!text) return { kind: 'empty' };
+    const ctx = parseContext(s);
+    const parsed = parse(text, ctx);
+    if (parsed.type === 'control') return { kind: 'control', intent: parsed.intent.kind };
+    if (parsed.type === 'no_action') return { kind: 'none' };
+    const timed = timedWords(text, ctx);
+    const { norm } = tokenize(text, ctx.pack);
+    const times = typed
+      ? timed.map(() => t)
+      : estimateWordTimes({ track: s.track, finalT: t, tokenIndices: timed.map((w) => w.tokenIndex), tokenCount: norm.length, lagMs: s.config.lagMs }).times;
+    const frame = withWordTimes(parsed.frame, times, typed ? t : t - s.config.lagMs);
+    const resolution = runResolve(s, {
+      frame,
+      samples: s.buffer,
+      selection: s.selection,
+      ...(s.lasso ? { lasso: s.lasso } : {}),
+      lastActed: s.lastActed,
+      typed,
+      tFinal: t,
+      wordSeen: [],
+      exclude: [],
+    }, {});
+    let sentence: string | undefined;
+    if (resolution.status === 'resolved') {
+      const args: ActionArgs = {};
+      for (const [slot, b] of Object.entries(resolution.bindings)) args[slot] = bindingToArg(b);
+      sentence = describe(s, frame.action, args);
+    }
+    return { kind: 'frame', action: frame.action, resolution, ...(sentence ? { sentence } : {}) };
+  }
+
+  /** Evidence ranking if a pointing word were spoken at `t` (drives the in-scene evidence aura). Pure. */
+  function liveEvidence(s: CoreState<S>, t: Millis): CandidateEvidence[] {
+    const cfg = s.config;
+    return scoreCandidates(prepareSamples(s.buffer, cfg), cfg, {
+      tWord: t,
+      window: [t - cfg.windowBefore, t + cfg.windowAfter],
+      flat: false,
+      candidates: selectablesOf(s),
+    });
+  }
+
   function reresolve(record: DecisionRecord, patch: Partial<FusionConfig>): Resolution | null {
     if (!record.frame) return null;
     const spec = specOf(record.frame.action);
@@ -774,6 +832,8 @@ export function createEngine<S>(app: AppDefinition<S>, baseConfig: Partial<Fusio
     labelOf,
     parseContext,
     reresolve,
+    preview,
+    liveEvidence,
   };
 }
 

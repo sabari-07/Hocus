@@ -1,4 +1,10 @@
-# Implementation plan: pointer-input
+# Implementation Plan: pointer-input
+
+## Overview
+
+Tasks for the pointer-input spec. Checkbox state reflects the current code; each task cites the requirements it covers. Tasks marked with `*` are optional test tasks.
+
+## Tasks
 
 - [x] 1. Pure math in core
   - [x] 1.1 One Euro filter: `oneEuroInit`, `oneEuroStep`, `OneEuro2D` (`packages/core/src/smoothing.ts`)
@@ -57,3 +63,104 @@
     - _Requirements: 2.1, 2.6_
   - [x]* 7.5 E2E test: mouse pointing and clicks on the built apps (`tests/e2e/`, not written)
     - _Requirements: 1.2, 4.1_
+
+- [x] 8. Head gestures
+  - [x] 8.1 `detectHeadGesture` (pure) in `packages/vision/src/pose.ts`; `VisionTracker.onHeadGesture` with cooldown
+    - _Requirements: 7.1, 7.2, 7.3, 7.4_
+  - [x] 8.2 Runtime wiring: nod/shake dispatch `gesture` events; `headGestures` setting runs face tracking without steering the pointer
+    - _Requirements: 7.5_
+  - [x]* 8.3 Unit tests (`tests/unit/head-gesture.test.ts`) and property P22 (`tests/properties/P22-head-gesture.prop.test.ts`)
+    - _Requirements: 7.1, 7.2, 7.3_
+
+## Task Dependency Graph
+
+Tasks build on each other in numeric order, so each wave holds one top-level task. Sub-tasks of a task run in its wave.
+
+```mermaid
+flowchart LR
+  T1
+  T1 --> T2
+  T2 --> T3
+  T3 --> T4
+  T4 --> T5
+  T5 --> T6
+  T6 --> T7
+  T7 --> T8
+```
+
+```json
+{
+  "waves": [
+    {
+      "id": 0,
+      "tasks": [
+        "1.1",
+        "1.2"
+      ]
+    },
+    {
+      "id": 1,
+      "tasks": [
+        "2.1",
+        "2.2",
+        "2.3"
+      ]
+    },
+    {
+      "id": 2,
+      "tasks": [
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4",
+        "3.5",
+        "3.6"
+      ]
+    },
+    {
+      "id": 3,
+      "tasks": [
+        "4"
+      ]
+    },
+    {
+      "id": 4,
+      "tasks": [
+        "5.1",
+        "5.2",
+        "5.3"
+      ]
+    },
+    {
+      "id": 5,
+      "tasks": [
+        "6.1",
+        "6.2"
+      ]
+    },
+    {
+      "id": 6,
+      "tasks": [
+        "7.1",
+        "7.2",
+        "7.3",
+        "7.4",
+        "7.5"
+      ]
+    },
+    {
+      "id": 7,
+      "tasks": [
+        "8.1",
+        "8.2",
+        "8.3"
+      ]
+    }
+  ]
+}
+```
+
+## Notes
+
+- Requirement ids refer to `requirements.md` in this folder and are cited by test titles; do not renumber them.
+- Do not mark a task done until its code and tests exist.

@@ -1,4 +1,4 @@
-# Design: speech-input
+# Design Document
 
 ## Overview
 
@@ -22,8 +22,11 @@ flowchart LR
   E -->|sound effect| C[Cues.play]
 ```
 
-## Components
+## Architecture
 
+`@hocus/speech` (`packages/speech/src`) wraps recognition, voice-activity detection, typed input, read-back and the optional proposer. It only produces `SpeechEvent` values; word timing is computed in `packages/core/src/timing.ts`. See Overview for the flow.
+
+## Components and Interfaces
 | File | Responsibility | Requirements |
 |---|---|---|
 | `packages/speech/src/recognizer.ts` | `Recognizer`: `start` (push-to-talk down), `stop`, `abort`, `setLang`, `checkLocal`, `installLocal`, `lastOnset`, `continuous`; `speechSupported()`; statuses `unsupported`, `idle`, `listening`, `error`, `denied` | 1, 4 |
@@ -70,20 +73,41 @@ allowed list, keep pointing words, empty if nothing fits"), sends the allowed li
 it normalizes to one of the allowed strings. The runtime puts the result first in `alts`; `onUtterance` tries
 alternatives only while the parse is still `no_action`.
 
-## Correctness properties
+## Data Models
 
-| Id | Property | Requirements |
-|---|---|---|
-| P07 | Several pointing words, each first seen in its own interim, bind in spoken order | 2.1, 2.2 (fusion-engine 2.7) |
-| P20 | Self-calibration keeps the lag in bounds and converges | fusion-engine 6.5, 6.6 |
-| P13 | Typed commands with a click selection give the same document as voice and pointing | 5.1, 5.2 (app-sdk 3.2) |
+The contract is `SpeechEvent` and `SpeechKind` in `packages/core/src/types.ts`, validated by `SpeechEventSchema` in `packages/core/src/schemas.ts`. Keyboard answers use `KeyIntent`.
 
-## Error handling
+## Correctness Properties
+
+### Property 1: P07 Several pointing words, each first seen in its own interim, bind in spoken order
+
+**Validates: Requirements 2.1, 2.2**
+
+Full reference: 2.1, 2.2 (fusion-engine 2.7)
+
+### Property 2: P20 Self-calibration keeps the lag in bounds and converges
+
+**Validates: Requirements 6.5, 6.6**
+
+Full reference: 6.5, 6.6 of fusion-engine
+
+### Property 3: P13 Typed commands with a click selection give the same document as voice and pointing
+
+**Validates: Requirements 5.1, 5.2**
+
+Full reference: 5.1, 5.2 (app-sdk 3.2)
+
+
+## Error Handling
 
 - Recognition errors map to `denied` or `error`; `no-speech` and `aborted` are ignored.
 - VAD failures leave `segments()` empty, so timing falls back to interim and position estimates.
 - The proposer catches every failure and returns `null`; a slow model cannot delay a command by more than 1.5 s.
 - `speechSynthesis` and `AudioContext` are checked before use.
+
+## Testing Strategy
+
+Property tests are listed under Correctness Properties. `npm run check` runs the determinism lint, the app-size budget, the typecheck and all tests (unit, properties, replays).
 
 ## Known gaps
 

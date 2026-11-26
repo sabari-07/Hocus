@@ -1,4 +1,4 @@
-# Design: fusion-engine
+# Design Document
 
 ## Overview
 
@@ -28,8 +28,11 @@ flowchart LR
   M --> RP[repair: other one / not that + self-calibration]
 ```
 
-## Components
+## Architecture
 
+`@hocus/core` (`packages/core/src`) is a pure library. Adapters produce `HocusEvent` values; `engine.step` folds them into `CoreState` and returns effects. The data flow is the diagram in Overview.
+
+## Components and Interfaces
 | File | Responsibility | Requirements |
 |---|---|---|
 | `types.ts` | Data contracts: events, samples, slots, bindings, resolutions, decision records, effects | 1.1 |
@@ -76,38 +79,116 @@ Hits are computed when the sample is captured (objects orbit or move), so the re
 4. Otherwise bind; confidence = best / total.
 5. Typed commands with N object words take the last N distinct dwell segments in order, then the selection order.
 
-## Correctness properties
+## Data Models
+
+The contracts are in `packages/core/src/types.ts`: `PointerSample` (with hits frozen at capture), `SpeechEvent`, `HocusEvent`, `CommandFrame`, `Binding`, `Resolution`, `CandidateEvidence`, `DecisionRecord`, `FusionConfig` and `Effect`. `CoreState<S>` is defined in `engine.ts`. Zod schemas for events and replay files are in `schemas.ts`.
+
+## Correctness Properties
 
 Each property is a fast-check test in `tests/properties/` whose title cites the requirement.
 
-| Id | Property | Requirements |
-|---|---|---|
-| P01 | A ≥250 ms dwell in the 800 ms before the word binds that object | 2.1 |
-| P02 | Shifts of ≤100 ms in tWord inside one dwell keep the binding | 2.6 |
-| P03 | Near-equal evidence asks and offers both | 2.3 |
-| P04 | No pointing evidence → `no_target`, document unchanged | 2.4 |
-| P05 | Unknown words never crash and never change the document | 1.6 |
-| P06 | Same log → identical state, effects and decisions | 1.3 |
-| P07 | Several pointing words bind in spoken order | 2.7 |
-| P08 | Undo k times restores the document from k steps ago; redo walks back | 5.4 |
-| P09 | One Euro output never leaves the input range | pointer-input 2.3 |
-| P10 | Grammar sentences parse to their expected frame; random text never throws | lexicon-parser 1.1, 1.4 |
-| P11 | "it" → memory unless fresh pointing ≥ `itOverrideEvidence` | 4.1, 4.2 |
-| P12 | Destructive bulk actions never run without confirmation | 5.5 |
-| P13 | Voice + pointing, click + typing and the actions menu give the same document | app-sdk 3.2 |
-| P14 | Reordering Hindi/Tamil tokens gives the same frame | lexicon-parser 2.2 |
-| P15 | Type constraints only remove candidates; non-colorable objects never get recoloured | 4.5 |
-| P16 | A fast sweep never beats a stable dwell of equal duration | 2.5 |
-| P17 | Lasso selects only objects mostly inside the loop | 3.5 |
-| P18 | Folding a prefix equals stepping n times | 1.4 |
-| P19 | Names stay unique and consistent through undo and redo | 4.3, 4.4 |
-| P20 | Lag stays in bounds and converges monotonically | 6.5, 6.6 |
+### Property 1: P01 A ≥250 ms dwell in the 800 ms before the word binds that object
+
+**Validates: Requirements 2.1**
+
+### Property 2: P02 Shifts of ≤100 ms in tWord inside one dwell keep the binding
+
+**Validates: Requirements 2.6**
+
+### Property 3: P03 Near-equal evidence asks and offers both
+
+**Validates: Requirements 2.3**
+
+### Property 4: P04 No pointing evidence → `no_target`, document unchanged
+
+**Validates: Requirements 2.4**
+
+### Property 5: P05 Unknown words never crash and never change the document
+
+**Validates: Requirements 1.6**
+
+### Property 6: P06 Same log → identical state, effects and decisions
+
+**Validates: Requirements 1.3**
+
+### Property 7: P07 Several pointing words bind in spoken order
+
+**Validates: Requirements 2.7**
+
+### Property 8: P08 Undo k times restores the document from k steps ago; redo walks back
+
+**Validates: Requirements 5.4**
+
+### Property 9: P09 One Euro output never leaves the input range
+
+**Validates: Requirements 2.3**
+
+Full reference: 2.3 of pointer-input
+
+### Property 10: P10 Grammar sentences parse to their expected frame; random text never throws
+
+**Validates: Requirements 1.1, 1.4**
+
+Full reference: 1.1, 1.4 of lexicon-parser
+
+### Property 11: P11 "it" → memory unless fresh pointing ≥ `itOverrideEvidence`
+
+**Validates: Requirements 4.1, 4.2**
+
+### Property 12: P12 Destructive bulk actions never run without confirmation
+
+**Validates: Requirements 5.5**
+
+### Property 13: P13 Voice + pointing, click + typing and the actions menu give the same document
+
+**Validates: Requirements 3.2**
+
+Full reference: 3.2 of app-sdk
+
+### Property 14: P14 Reordering Hindi/Tamil tokens gives the same frame
+
+**Validates: Requirements 2.2**
+
+Full reference: 2.2 of lexicon-parser
+
+### Property 15: P15 Type constraints only remove candidates; non-colorable objects never get recoloured
+
+**Validates: Requirements 4.5**
+
+### Property 16: P16 A fast sweep never beats a stable dwell of equal duration
+
+**Validates: Requirements 2.5**
+
+### Property 17: P17 Lasso selects only objects mostly inside the loop
+
+**Validates: Requirements 3.5**
+
+### Property 18: P18 Folding a prefix equals stepping n times
+
+**Validates: Requirements 1.4**
+
+### Property 19: P19 Names stay unique and consistent through undo and redo
+
+**Validates: Requirements 4.3, 4.4**
+
+### Property 20: P20 Lag stays in bounds and converges monotonically
+
+**Validates: Requirements 6.5, 6.6**
+
+### Property 21: P21 `preview` and `liveEvidence` never change state; a typed command resolves as its preview said
+
+**Validates: Requirements 7.4, 7.5, 7.6**
+
 
 `scripts/sanity-mutants.mjs` breaks one rule at a time (margin, stability, confirmation, word order, undo,
 type constraint, "it" override) and checks that the named property catches it.
 
-## Error handling
+## Error Handling
 
 - Malformed events are rejected at the boundary (`validateEvent`) with the field path; the state is unchanged.
 - Unknown phrases produce `no_action` + a hint taken from the app's own examples.
 - Every non-execution outcome announces why (point first, show the size, nothing else it could be).
+
+## Testing Strategy
+
+Property tests are listed under Correctness Properties. `npm run check` runs the determinism lint, the app-size budget, the typecheck and all tests (unit, properties, replays).
